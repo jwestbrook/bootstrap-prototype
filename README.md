@@ -1,4 +1,22 @@
-[Twitter Bootstrap](http://twitter.github.com/bootstrap) [![Build Status](https://secure.travis-ci.org/twitter/bootstrap.png)](http://travis-ci.org/twitter/bootstrap)
+
+Twitter Bootstrap for PrototypeJS
+================
+
+For those developers that use PrototypeJS, Twitter Bootstrap requires the use of JQuery. If you do not want to load another library just to handle the the Bootstrap interactions use this fork of Twitter Bootstrap.
+
+
+Differences according to PrototypeJS standards
+
+* effects and methods are called from the `BootStrap` namespace ie `new BootStrap.Modal('elementid',{option})`
+* If you include [script.aculo.us](http://madrobby.github.com/scriptaculous/) you will get consistent behaviors across all browsers that script.aculo.us and PrototypeJS support, otherwise you will only get the fades/movement/etc in browsers that support CSS transitions (sorry Internet Explorer)
+* custom events that are fired will also be namespaced to `bootstrap:*` ie `$('element').fire('bootstrap:closed')`
+
+
+
+
+Official Twitter Bootstrap README Follows
+
+[Twitter Bootstrap](http://twitter.github.com/bootstrap)
 =================
 
 Bootstrap is a sleek, intuitive, and powerful front-end framework for faster and easier web development, created and maintained by [Mark Otto](http://twitter.com/mdo) and [Jacob Thornton](http://twitter.com/fat).
