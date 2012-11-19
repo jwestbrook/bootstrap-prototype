@@ -16,12 +16,20 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * ========================================================= */
+/*
+
+Modified for use with PrototypeJS
+
+http://github.com/jwestbrook/bootstrap-prototype
+
+
+*/
 
 
 
 /* MODAL CLASS DEFINITION
 * ====================== */
-if(BootStrap == undefined)
+if(BootStrap === undefined)
 {
 	var BootStrap = {};
 }
@@ -63,17 +71,36 @@ BootStrap.Modal.prototype = {
 		this.escape()
 		
 		this.backdrop(function () {
-			var transition = Effect != undefined && Effect.Fade != undefined && that.$element.hasClassName('fade')
+			var transition = (BootStrap.handleeffects == 'css' || (BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined')) && that.$element.hasClassName('fade')
 			
 			if (!that.$element.up().length) {
 				$$("body")[0].insert(that.$element);
 			}
 			that.$element.setStyle({display:'block'})
 			
-			transition ? new Effect.Morph(that.$element,{duration:0.3,style:'top:50%',"afterFinish":function(){
-				that.$element.addClassName('in').writeAttribute('aria-hidden', false)
-				that.$element.fire("bootstrap:shown");
-			}}) : that.$element.addClassName('in').writeAttribute('aria-hidden', false).fire("bootstrap:shown");
+			if(transition && BootStrap.handleeffects == 'css')
+			{
+				that.$element.observe(BootStrap.transitionendevent,function(){
+					that.$element.fire("bootstrap:shown");
+				});
+				setTimeout(function(){
+					that.$element.addClassName('in').writeAttribute('aria-hidden',false);
+				},1);
+			}
+			else if(transition && BootStrap.handleeffects == 'effect')
+			{
+				new Effect.Parallel([
+					new Effect.Morph(that.$element,{sync:true,style:'top:50%'}),
+					new Effect.Opacity(that.$element,{sync:true,from:0,to:1})
+					],{duration:0.3,afterFinish:function(){
+						that.$element.addClassName('in').writeAttribute('aria-hidden', false)
+						that.$element.fire("bootstrap:shown");
+					}})
+			}
+			else
+			{
+				that.$element.addClassName('in').writeAttribute('aria-hidden', false).fire("bootstrap:shown");
+			}
 			
 			that.enforceFocus()
 		})
@@ -90,11 +117,16 @@ BootStrap.Modal.prototype = {
 		
 		this.escape()
 		
-		if(Effect != undefined && Effect.Fade != undefined && this.$element.hasClassName('fade'))
+		if(BootStrap.handleeffects == 'css' && this.$element.hasClassName('fade'))
 		{
 			this.hideWithTransition()
 		}
-		else{
+		else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined' && this.$element.hasClassName('fade'))
+		{
+			this.hideWithTransition()
+		}
+		else
+		{
 			this.hideModal()
 			this.$element.setStyle({display:''});
 		}
@@ -123,19 +155,32 @@ BootStrap.Modal.prototype = {
 	
 	, hideWithTransition: function () {
 		var that = this
-		new Effect.Morph(that.$element,{duration:0.30,style:'top:-25%',afterFinish:function(){
-			that.$element
-			.removeClassName('in')
-			.writeAttribute('aria-hidden', true)
-			that.$element.setStyle({display:''});
-			that.$element.setStyle({top:''})
-			that.hideModal()
-		}})
+		
+		if(BootStrap.handleeffects == 'css')
+		{
+			this.$element.observe(BootStrap.transitionendevent,function(){
+				this.setStyle({display:''});
+				this.setStyle({top:''})
+				that.hideModal()
+				this.stopObserving(BootStrap.transitionendevent)
+			})
+			setTimeout(function(){
+				this.$element.removeClassName('in').writeAttribute('aria-hidden',true)
+			}.bind(this))
+		}
+		else
+		{
+			new Effect.Morph(this.$element,{duration:0.30,style:'top:-25%;',afterFinish:function(effect){
+				effect.element.removeClassName('in').writeAttribute('aria-hidden', true)
+				effect.element.setStyle({display:''});
+				effect.element.setStyle({top:''})
+				that.hideModal()
+			}})
+		}
 	}
 	
-	, hideModal: function (that) {
-	
-		this.$element.setStyle({display:'none'}).fire('bootstrap:hidden')
+	, hideModal: function () {
+		this.$element.fire('bootstrap:hidden')
 		this.backdrop()
 	}
 	
@@ -145,34 +190,68 @@ BootStrap.Modal.prototype = {
 	}
 	
 	, backdrop: function (callback) {
-		
+
 		var that = this
 		, animate = this.$element.hasClassName('fade') ? 'fade' : ''
 		
 		if (this.isShown && this.options.backdrop) {
-			var doAnimate = Effect != undefined && Effect.Fade != undefined && animate
+			var doAnimate = (BootStrap.handleeffects == 'css' || (BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined')) && animate
 			
-			this.$backdrop = new Element("div",{"class":"modal-backdrop "+animate}).setOpacity(0)
+			this.$backdrop = new Element("div",{"class":"modal-backdrop "+animate})
+			if(doAnimate && BootStrap.handleeffects == 'css')
+			{
+				this.$backdrop.observe(BootStrap.transitionendevent,function(){
+					callback()
+					this.stopObserving(BootStrap.transitionendevent)
+				})
+			}
+			else if(doAnimate && BootStrap.handleeffects == 'effect')
+			{
+				this.$backdrop.setOpacity(0)
+			}
 			
 			this.$backdrop.observe("click",function(){
-			this.options.backdrop == 'static' ? '' : this.hide()
-			}.bind(this))
+			that.options.backdrop == 'static' ? '' : that.hide()
+			})
 			
 			$$("body")[0].insert(this.$backdrop)
 			
-			//          if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
-			
-			this.$backdrop.addClassName('in')
-			
-			doAnimate ? new Effect.Appear(this.$backdrop,{from:0,to:0.80,duration:0.3,afterFinish:callback}) : callback()
+			if(doAnimate && BootStrap.handleeffects == 'effect')
+			{
+				new Effect.Appear(this.$backdrop,{from:0,to:0.80,duration:0.3,afterFinish:callback})
+			}
+			else
+			{
+				callback();
+			}
+			setTimeout(function(){
+				that.$backdrop.addClassName('in');
+			},1);
+
 		
 		} else if (!this.isShown && this.$backdrop) {
-		
-			this.$backdrop.removeClassName('in')
 			
-			Effect != undefined && Effect.Fade != undefined && this.$element.hasClassName('fade')?
-			Effect.Fade(this.$backdrop,{duration:0.3,afterFinish:this.removeBackdrop.bind(this)}) :
-			this.removeBackdrop()
+			if(animate && BootStrap.handleeffects == 'css')
+			{
+				that.$backdrop.observe(BootStrap.transitionendevent,function(){
+					that.removeBackdrop()
+				});
+				setTimeout(function(){
+					that.$backdrop.removeClassName('in')
+				},1);
+			}
+			else if(animate && BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined')
+			{
+				new Effect.Fade(that.$backdrop,{duration:0.3,from:that.$backdrop.getOpacity()*1,afterFinish:function(){
+					that.$backdrop.removeClassName('in')
+					that.removeBackdrop()
+				}})
+			}
+			else
+			{
+				that.$backdrop.removeClassName('in')
+				that.removeBackdrop()
+			}
 		
 		} else if (callback) {
 			callback()
