@@ -1,5 +1,5 @@
 /* ============================================================
- * bootstrap-button.js v2.2.1
+ * bootstrap-button.js v2.2.2
  * http://twitter.github.com/bootstrap/javascript.html#buttons
  * ============================================================
  * Copyright 2012 Twitter, Inc.
@@ -16,6 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============================================================ */
+/*
+
+Modified for use with PrototypeJS
+
+http://github.com/jwestbrook/bootstrap-prototype
+
+
+*/
 
 
 

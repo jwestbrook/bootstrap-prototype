@@ -6,7 +6,7 @@ For those developers that use PrototypeJS, Twitter Bootstrap requires the use of
 
 Differences according to PrototypeJS standards
 
-* effects and methods are called from the `BootStrap` namespace ie `new BootStrap.Modal('elementid',{option})`
+* effects and methods are called from the `BootStrap` namespace ie `new BootStrap.Modal('elementid',{option})`. This prevents conflicts with any other javascript libraries you may have loaded.
 * If you include [script.aculo.us](http://madrobby.github.com/scriptaculous/) you will get consistent behaviors across all browsers that script.aculo.us and PrototypeJS support, otherwise you will only get the fades/movement/etc in browsers that support CSS transitions (sorry Internet Explorer)
 * custom events that are fired will also be namespaced to `bootstrap:*` ie `$('element').fire('bootstrap:closed')`
 
