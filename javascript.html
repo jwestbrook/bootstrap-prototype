@@ -25,16 +25,6 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
 
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-146052-10']);
-      _gaq.push(['_trackPageview']);
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
   </head>
 
   <body data-spy="scroll" data-target=".bs-docs-sidebar">
@@ -84,7 +74,7 @@
 <header class="jumbotron subhead">
   <div class="container">
     <h1>JavaScript</h1>
-    <p class="lead">Bring Bootstrap's components to life&mdash;now with 13 custom jQuery plugins.
+    <p class="lead">Bring Bootstrap's components to life&mdash;now with 13 custom PrototypeJS plugins.
   </div>
 </header>
 
@@ -134,13 +124,15 @@
           <pre class="prettyprint linenums">$('body').off('.alert.data-api')</pre>
 
           <h3>Programmatic API</h3>
-          <p>We also believe you should be able to use all Bootstrap plugins purely through the JavaScript API. All public APIs are single, chainable methods, and return the collection acted upon.</p>
-          <pre class="prettyprint linenums">$(".btn.danger").button("toggle").addClass("fat")</pre>
+          <p>We also believe you should be able to use all Bootstrap plugins purely through the JavaScript API. All plugins are contained within the BootStrap namespace and return an instance of the specific plugin.</p>
+          <pre class="prettyprint linenums">
+var btn = new BootStrap.Button('btn')
+btn.toggle()</pre>
           <p>All methods should accept an optional options object, a string which targets a particular method, or nothing (which initiates a plugin with default behavior):</p>
 <pre class="prettyprint linenums">
-$("#myModal").modal()                       // initialized with defaults
-$("#myModal").modal({ keyboard: false })   // initialized with no keyboard
-$("#myModal").modal('show')                // initializes and invokes show immediately</p>
+new BootStrap.Modal('myModal')                       // initialized with defaults
+new BootStrap.Modal('myModal',{ keyboard: false })   // initialized with no keyboard
+new BootStrap.Modal('myModal','show')                // initializes and invokes show immediately</p>
 </pre>
           <p>Each plugin also exposes its raw constructor on a `Constructor` property: <code>$.fn.popover.Constructor</code>. If you'd like to get a particular plugin instance, retrieve it directly from an element: <code>$('[rel=popover]').data('popover')</code>.</p>
 
@@ -148,8 +140,8 @@ $("#myModal").modal('show')                // initializes and invokes show immed
           <p>Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. <code>show</code>) is triggered at the start of an event, and its past participle form (ex. <code>shown</code>) is trigger on the completion of an action.</p>
           <p>All infinitive events provide preventDefault functionality. This provides the abililty to stop the execution of an action before it starts.</p>
 <pre class="prettyprint linenums">
-$('#myModal').on('show', function (e) {
-    if (!data) return e.preventDefault() // stops modal from being shown
+$('myModal').on('bootstrap:show', function (e) {
+    if (!data) return e.stop() // stops modal from being shown
 })
 </pre>
         </section>
@@ -163,7 +155,7 @@ $('#myModal').on('show', function (e) {
             <h1>Transitions <small>bootstrap-transition.js</small></h1>
           </div>
           <h3>About transitions</h3>
-          <p>For simple transition effects, include bootstrap-transition.js once alongside the other JS files. If you're using the compiled (or minified) bootstrap.js, there is no need to include this&mdash;it's already there.</p>
+          <p>For simple transition effects, include bootstrap-transition.js once alongside the other JS files. If you're using the compiled (or minified) bootstrap.js, there is no need to include this&mdash;it's already there. For browsers that do not support CSS3 transitions (Internet Explorer) you can include Script.aculo.us to get consistent transition effects for all users.</p>
           <h3>Use cases</h3>
           <p>A few examples of the transition plugin:</p>
           <ul>
@@ -290,7 +282,7 @@ $('#myModal').on('show', function (e) {
 
           <h3>Via JavaScript</h3>
           <p>Call a modal with id <code>myModal</code> with a single line of JavaScript:</p>
-          <pre class="prettyprint linenums">$('#myModal').modal(options)</pre>
+          <pre class="prettyprint linenums">new BootStrap.Modal('myModal',options)</pre>
 
           <h3>Options</h3>
           <p>Options can be passed via data attributes or JavaScript. For data attributes, append the option name to <code>data-</code>, as in <code>data-backdrop=""</code>.</p>
@@ -326,29 +318,29 @@ $('#myModal').on('show', function (e) {
                <td>remote</td>
                <td>path</td>
                <td>false</td>
-               <td><p>If a remote url is provided, content will be loaded via jQuery's <code>load</code> method and injected into the <code>.modal-body</code>. If you're using the data api, you may alternatively use the <code>href</code> tag to specify the remote source. An example of this is shown below:</p>
+               <td><p>If a remote url is provided, content will be loaded via <code>Ajax.Updater</code> method and injected into the <code>.modal-body</code>. If you're using the data api, you may alternatively use the <code>href</code> tag to specify the remote source. An example of this is shown below:</p>
               <pre class="prettyprint linenums"><code>&lt;a data-toggle="modal" href="remote.html" data-target="#modal"&gt;click me&lt;/a&gt;</code></pre></td>
              </tr>
             </tbody>
           </table>
 
           <h3>Methods</h3>
-          <h4>.modal(options)</h4>
+          <h4>BootStrap.Modal(options)</h4>
           <p>Activates your content as a modal. Accepts an optional options <code>object</code>.</p>
 <pre class="prettyprint linenums">
-$('#myModal').modal({
+var modal = new BootStrap.Modal('myModal',{
   keyboard: false
 })
 </pre>
-          <h4>.modal('toggle')</h4>
+          <h4>BootStrap.Modal#toggle()</h4>
           <p>Manually toggles a modal.</p>
-          <pre class="prettyprint linenums">$('#myModal').modal('toggle')</pre>
-          <h4>.modal('show')</h4>
+          <pre class="prettyprint linenums">modal.toggle()</pre>
+          <h4>BootStrap.Modal#show()</h4>
           <p>Manually opens a modal.</p>
-          <pre class="prettyprint linenums">$('#myModal').modal('show')</pre>
-          <h4>.modal('hide')</h4>
+          <pre class="prettyprint linenums">modal.show()</pre>
+          <h4>BootStrap.Modal#hide()</h4>
           <p>Manually hides a modal.</p>
-          <pre class="prettyprint linenums">$('#myModal').modal('hide')</pre>
+          <pre class="prettyprint linenums">modal.hide()</pre>
           <h3>Events</h3>
           <p>Bootstrap's modal class exposes a few events for hooking into modal functionality.</p>
           <table class="table table-bordered table-striped">
@@ -360,25 +352,25 @@ $('#myModal').modal({
             </thead>
             <tbody>
              <tr>
-               <td>show</td>
+               <td>bootstrap:show</td>
                <td>This event fires immediately when the <code>show</code> instance method is called.</td>
              </tr>
              <tr>
-               <td>shown</td>
+               <td>bootstrap:shown</td>
                <td>This event is fired when the modal has been made visible to the user (will wait for css transitions to complete).</td>
              </tr>
              <tr>
-               <td>hide</td>
+               <td>bootstrap:hide</td>
                <td>This event is fired immediately when the <code>hide</code> instance method has been called.</td>
              </tr>
              <tr>
-               <td>hidden</td>
-               <td>This event is fired when the modal has finished being hidden from the user (will wait for css transitions to complete).</td>
+               <td>bootstrap:hidden</td>
+               <td>This event is fired when the modal has finished being hidden from the user (will wait for css or Effect transitions to complete).</td>
              </tr>
             </tbody>
           </table>
 <pre class="prettyprint linenums">
-$('#myModal').on('hidden', function () {
+$('myModal').observe('bootstrap:hidden', function () {
   // do something…
 })
 </pre>
@@ -510,14 +502,15 @@ $('#myModal').on('hidden', function () {
 
           <h3>Via JavaScript</h3>
           <p>Call the dropdowns via JavaScript:</p>
-          <pre class="prettyprint linenums">$('.dropdown-toggle').dropdown()</pre>
+          <pre class="prettyprint linenums">var dropdown = new BootStrap.DropDown('dropdownid')</pre>
 
           <h3>Options</h3>
           <p><em>None</em></p>
 
           <h3>Methods</h3>
-          <h4>$().dropdown('toggle')</h4>
+          <h4>BootStrap.DropDown#toggle()</h4>
           <p>A programatic api for toggling menus for a given navbar or tabbed navigation.</p>
+          <pre class="prettyprint linenums">dropdown.toggle()</pre>
         </section>
 
 
@@ -1080,18 +1073,22 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
 
         <h2>Usage</h2>
         <p>Enable dismissal of an alert via JavaScript:</p>
-        <pre class="prettyprint linenums">$(".alert").alert()</pre>
+        <pre class="prettyprint linenums">$$('.alert').each(function(el){
+new BootStrap.Alert(el)
+        })</pre>
 
         <h3>Markup</h3>
         <p>Just add <code>data-dismiss="alert"</code> to your close button to automatically give an alert close functionality.</p>
         <pre class="prettyprint linenums">&lt;a class="close" data-dismiss="alert" href="#"&gt;&amp;times;&lt;/a&gt;</pre>
 
         <h3>Methods</h3>
-        <h4>$().alert()</h4>
+        <h4>new BootStrap.Alert()</h4>
         <p>Wraps all alerts with close functionality. To have your alerts animate out when closed, make sure they have the <code>.fade</code> and <code>.in</code> class already applied to them.</p>
-        <h4>.alert('close')</h4>
+        <h4>new BootStrap.Alert('elementid','close')</h4>
         <p>Closes an alert.</p>
-        <pre class="prettyprint linenums">$(".alert").alert('close')</pre>
+        <pre class="prettyprint linenums">$$('.alert').each(function(el){
+new BootStrap.Alert(el,'close')
+        })</pre>
 
 
         <h3>Events</h3>
@@ -1105,17 +1102,17 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
           </thead>
           <tbody>
            <tr>
-             <td>close</td>
+             <td>bootstrap:close</td>
              <td>This event fires immediately when the <code>close</code> instance method is called.</td>
            </tr>
            <tr>
-             <td>closed</td>
+             <td>bootstrap:closed</td>
              <td>This event is fired when the alert has been closed (will wait for css transitions to complete).</td>
            </tr>
           </tbody>
         </table>
 <pre class="prettyprint linenums">
-$('#my-alert').bind('closed', function () {
+$('my-alert').observe('bootstrap:closed',function(){
   // do something…
 })
 </pre>
@@ -1189,7 +1186,10 @@ $('#my-alert').bind('closed', function () {
 
             <h2>Usage</h2>
             <p>Enable buttons via JavaScript:</p>
-            <pre class="prettyprint linenums">$('.nav-tabs').button()</pre>
+            <pre class="prettyprint linenums">
+var btn = new BootStrap.Button('elementid')
+var btn1 = new BootStrap.Button($('elementid1'))
+            </pre>
 
             <h3>Markup</h3>
             <p>Data attributes are integral to the button plugin. Check out the example code below for the various markup types.</p>
@@ -1198,14 +1198,15 @@ $('#my-alert').bind('closed', function () {
             <p><em>None</em></p>
 
             <h3>Methods</h3>
-            <h4>$().button('toggle')</h4>
+            <h4>BootStrap.Button#toggle()</h4>
             <p>Toggles push state. Gives the button the appearance that it has been activated.</p>
             <div class="alert alert-info">
               <strong>Heads up!</strong>
               You can enable auto toggling of a button by using the <code>data-toggle</code> attribute.
             </div>
             <pre class="prettyprint linenums">&lt;button type="button" class="btn" data-toggle="button" &gt;…&lt;/button&gt;</pre>
-            <h4>$().button('loading')</h4>
+            <pre class="prettyprint linenums">btn.toggle()</pre>
+            <h4>BootStrap.Button#setState('loading')</h4>
             <p>Sets button state to loading - disables button and swaps text to loading text. Loading text should be defined on the button element using the data attribute <code>data-loading-text</code>.
             </p>
             <pre class="prettyprint linenums">&lt;button type="button" class="btn" data-loading-text="loading stuff..." &gt;...&lt;/button&gt;</pre>
@@ -1213,13 +1214,13 @@ $('#my-alert').bind('closed', function () {
               <strong>Heads up!</strong>
               <a href="https://github.com/twitter/bootstrap/issues/793">Firefox persists the disabled state across page loads</a>. A workaround for this is to use <code>autocomplete="off"</code>.
             </div>
-            <h4>$().button('reset')</h4>
+            <h4>BootStrap.Button#setState('reset')</h4>
             <p>Resets button state - swaps text to original text.</p>
-            <h4>$().button(string)</h4>
+            <h4>btn.setState(string)</h4>
             <p>Resets button state - swaps text to any data defined text state.</p>
 <pre class="prettyprint linenums">&lt;button type="button" class="btn" data-complete-text="finished!" &gt;...&lt;/button&gt;
 &lt;script&gt;
-  $('.btn').button('complete')
+btn.setState('complete')
 &lt;/script&gt;
 </pre>
           </section>
@@ -1723,7 +1724,7 @@ $('[data-spy="affix"]').each(function () {
         <ul class="footer-links">
           <li><a href="http://blog.getbootstrap.com">Blog</a></li>
           <li class="muted">&middot;</li>
-          <li><a href="https://github.com/twitter/bootstrap/issues?state=open">Issues</a></li>
+          <li><a href="https://github.com/jwestbrook/bootstrap-prototype/issues">Issues</a></li>
           <li class="muted">&middot;</li>
           <li><a href="https://github.com/twitter/bootstrap/wiki">Roadmap and changelog</a></li>
         </ul>
@@ -1736,39 +1737,26 @@ $('[data-spy="affix"]').each(function () {
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/prototype.js"></script>
     <script src="assets/js/google-code-prettify/prettify.js"></script>
-    <script src="assets/js/bootstrap-transition.js"></script>
-    <script src="assets/js/bootstrap-alert.js"></script>
-    <script src="assets/js/bootstrap-modal.js"></script>
-    <script src="assets/js/bootstrap-dropdown.js"></script>
-    <script src="assets/js/bootstrap-scrollspy.js"></script>
+    <script src="assets/js/bootstrap-transition_prototype.js"></script>
+    <script src="assets/js/bootstrap-alert_prototype.js"></script>
+    <script src="assets/js/bootstrap-modal_prototype.js"></script>
+    <script src="assets/js/bootstrap-dropdown_prototype.js"></script>
+    <script src="assets/js/bootstrap-button_prototype.js"></script>
+    <!--<script src="assets/js/bootstrap-scrollspy.js"></script>
     <script src="assets/js/bootstrap-tab.js"></script>
     <script src="assets/js/bootstrap-tooltip.js"></script>
     <script src="assets/js/bootstrap-popover.js"></script>
-    <script src="assets/js/bootstrap-button.js"></script>
     <script src="assets/js/bootstrap-collapse.js"></script>
     <script src="assets/js/bootstrap-carousel.js"></script>
     <script src="assets/js/bootstrap-typeahead.js"></script>
-    <script src="assets/js/bootstrap-affix.js"></script>
+    <script src="assets/js/bootstrap-affix.js"></script>-->
     <script src="assets/js/application.js"></script>
 
 
     <!-- Analytics
     ================================================== -->
-    <script>
-      var _gauges = _gauges || [];
-      (function() {
-        var t   = document.createElement('script');
-        t.type  = 'text/javascript';
-        t.async = true;
-        t.id    = 'gauges-tracker';
-        t.setAttribute('data-site-id', '4f0dc9fef5a1f55508000013');
-        t.src = '//secure.gaug.es/track.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(t, s);
-      })();
-    </script>
 
   </body>
 </html>

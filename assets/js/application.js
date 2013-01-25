@@ -1,17 +1,36 @@
 // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
 // IT'S ALL JUST JUNK FOR OUR DOCS!
 // ++++++++++++++++++++++++++++++++++++++++++
+var btn;
 
+document.observe('dom:loaded',function(){
+    // Disable certain links in docs
+    $$('section [href^=#]').invoke('observe','click',function (e) {
+      e.stop()
+    })
+
+
+    // make code pretty
+    window.prettyPrint && prettyPrint()
+
+  // button state demo
+  btn = new BootStrap.Button("fat-btn");
+  $("fat-btn").observe("click",function(){
+    btn.setState('loading');
+    setTimeout(function () {
+      btn.setState('reset')
+    }, 3000);
+  });
+
+});
+
+/*
 !function ($) {
 
   $(function(){
 
     var $window = $(window)
 
-    // Disable certain links in docs
-    $('section [href^=#]').click(function (e) {
-      e.preventDefault()
-    })
 
     // side bar
     $('.bs-docs-sidenav').affix({
@@ -21,8 +40,6 @@
       }
     })
 
-    // make code pretty
-    window.prettyPrint && prettyPrint()
 
     // add-ons
     $('.add-on :checkbox').on('click', function () {
@@ -54,15 +71,7 @@
         e.preventDefault()
       })
 
-    // button state demo
-    $('#fat-btn')
-      .click(function () {
-        var btn = $(this)
-        btn.button('loading')
-        setTimeout(function () {
-          btn.button('reset')
-        }, 3000)
-      })
+
 
     // carousel demo
     $('#myCarousel').carousel()
@@ -151,4 +160,4 @@ $.ajaxTransport('jsonpi', function(opts, originalOptions, jqXHR) {
   }
 })
 
-}(window.jQuery)
+}(window.jQuery)*/
