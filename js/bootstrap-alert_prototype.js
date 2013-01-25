@@ -37,50 +37,49 @@ if(BootStrap === undefined)
 
  /* ALERT CLASS DEFINITION
   * ====================== */
-    BootStrap.Alert = function (element) {
-        $(element).observe('click',this.close)
-      }
+	BootStrap.Alert = Class.create({
+		initialize : function (element) {
+			$(element).observe('click',this.close)
+		},
+		close : function (e) {
+			var $this = $(this)
+			  , selector = $this.readAttribute('data-target')
+			  , $parent
+			  
+		
+			if (!selector) {
+			  selector = $this.href
+			  selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '').replace('#','') //strip for ie7
+			}
+			
+			(selector != undefined && selector.length > 0) ? $parent = $(selector) : '';
+		
+			($parent != undefined && $parent.length) || ($parent = $this.hasClassName('alert') ? $this : $this.up())
+		
+			$parent.fire('bootstrap:close')
+		
+			function removeElement() {
+			  $parent.fire('bootstrap:closed')
+			  $parent.remove()
+			}
+		
+			if(BootStrap.handleeffects === 'css' && $parent.hasClassName('fade'))
+			{
+				$parent.observe(BootStrap.transitionendevent,function(){
+					removeElement();
+				});
+				$parent.removeClassName('in')
+			}
+			else if(BootStrap.handleeffects === 'effect' && $parent.hasClassName('fade'))
+			{
+				new Effect.Fade($parent,{duration:0.3,from:$parent.getOpacity()*1,afterFinish:function(){
+					$parent.removeClassName('in')
+					removeElement()
+				}})
+			}
 
-
-
-  BootStrap.Alert.prototype.close = function (e) {
-    var $this = $(this)
-      , selector = $this.readAttribute('data-target')
-      , $parent
-	  
-
-    if (!selector) {
-      selector = $this.href
-      selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '').replace('#','') //strip for ie7
-    }
-	
-	(selector != undefined && selector.length > 0) ? $parent = $(selector) : '';
-
-    ($parent != undefined && $parent.length) || ($parent = $this.hasClassName('alert') ? $this : $this.up())
-
-    $parent.fire('bootstrap:close')
-
-    function removeElement() {
-      $parent.fire('bootstrap:closed')
-	  $parent.remove()
-    }
-
-	if(BootStrap.handleeffects === 'css' && $parent.hasClassName('fade'))
-	{
-		$parent.observe(BootStrap.transitionendevent,function(){
-			removeElement();
-		});
-	    $parent.removeClassName('in')
-	}
-	else if(BootStrap.handleeffects === 'effect' && $parent.hasClassName('fade'))
-	{
-		new Effect.Fade($parent,{duration:0.3,from:$parent.getOpacity()*1,afterFinish:function(){
-		    $parent.removeClassName('in')
-			removeElement()
-		}})
-	}
-
-  }
+		}
+	});
 
 document.observe("dom:loaded",function(){
 	$$('.alert [data-dismiss="alert"]').each(function(i){

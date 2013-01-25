@@ -37,51 +37,51 @@ if(BootStrap === undefined)
  /* BUTTON PUBLIC CLASS DEFINITION
   * ============================== */
 
-   BootStrap.Button = function (element, options) {
-    this.$element = $(element)
-	if(typeof options == 'object')
-	{
-	    this.options = options
-		this.options.loadingText = typeof this.options.loadingText != 'undefined' ? options.loadingText : ''
-	}
-    else if(typeof options != 'undefined' && options == 'toggle')
-	{
-		this.toggle()
-	}
-	else if (typeof options != 'undefined'){
-		this.setState(options)
-	}
-	
-  }
-
-  BootStrap.Button.prototype.setState = function (state) {
-    var d = 'disabled'
+  BootStrap.Button = Class.create({
+    initialize : function (element, options) {
+      this.$element = $(element)
+      if(typeof options == 'object')
+      {
+        this.options = options
+        this.options.loadingText = typeof this.options.loadingText != 'undefined' ? options.loadingText : ''
+      }
+      else if(typeof options != 'undefined' && options == 'toggle')
+      {
+        this.toggle()
+      }
+      else if (typeof options != 'undefined'){
+        this.setState(options)
+      }
+    
+    },
+    setState : function (state) {
+      var d = 'disabled'
       , $el = this.$element
       , data = $el.gethtml5data()
       , val = $el.readAttribute('type') == 'input' ? 'value' : 'innerHTML'
-
-    state = state + 'Text'
-    data.resetText || $el.sethtml5data('resetText',$el[val])
-
-	$el[val] = (data[state] || this.options[state])
-
-    // push to event loop to allow forms to submit
-    setTimeout(function () {
-      state == 'loadingText' ?
+      
+      state = state + 'Text'
+      data.resetText || $el.sethtml5data('resetText',$el[val])
+      
+      $el[val] = (data[state] || this.options[state])
+      
+      // push to event loop to allow forms to submit
+      setTimeout(function () {
+        state == 'loadingText' ?
         $el.addClassName(d).writeAttribute(d,true) :
         $el.removeClassName(d).writeAttribute(d,false)
-    }, 0)
-  }
-
-  BootStrap.Button.prototype.toggle = function () {
-    var $parent = this.$element.up('[data-toggle="buttons-radio"]')
-
-    $parent && $parent
+      }, 0)
+    },
+    toggle : function () {
+      var $parent = this.$element.up('[data-toggle="buttons-radio"]')
+      
+      $parent && $parent
       .select('.active')
       .invoke('removeClassName','active')
-
-    this.$element.toggleClassName('active')
-  }
+      
+      this.$element.toggleClassName('active')
+    }
+  });
 
 
   /* BUTTON DATA-API
