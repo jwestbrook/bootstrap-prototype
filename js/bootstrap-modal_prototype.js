@@ -34,28 +34,26 @@ if(BootStrap === undefined)
 	var BootStrap = {};
 }
 
-BootStrap.Modal = function (element, options) {
-	this.$element = $(element);
-	this.options = options
-	this.options.backdrop = this.options.backdrop != undefined ? options.backdrop : true
-	this.options.keyboard = this.options.keyboard != undefined ? options.keyboard : true
-	this.options.show = this.options.show != undefined ? options.show : true
-	
-	
-	if(this.options.show)
-		this.show();
-	$$("[data-dismiss='modal']").invoke("observe","click",function(){
-		this.hide()
-	}.bind(this))
-	
-	if(this.options.remote && this.$element.select('.modal-body'))
-	{
-		new Ajax.Updater(this.$element.select('.modal-body')[0],this.options.remote);
-	}
-}
-
-BootStrap.Modal.prototype = {
-	
+	BootStrap.Modal = Class.create({
+	initialize : function (element, options) {
+		this.$element = $(element);
+		this.options = options
+		this.options.backdrop = this.options.backdrop != undefined ? options.backdrop : true
+		this.options.keyboard = this.options.keyboard != undefined ? options.keyboard : true
+		this.options.show = this.options.show != undefined ? options.show : true
+		
+		
+		if(this.options.show)
+			this.show();
+		$$("[data-dismiss='modal']").invoke("observe","click",function(){
+			this.hide()
+		}.bind(this))
+		
+		if(this.options.remote && this.$element.select('.modal-body'))
+		{
+			var t = new Ajax.Updater(this.$element.select('.modal-body')[0],this.options.remote);
+		}
+	},
 	toggle: function () {
 		return this[!this.isShown ? 'show' : 'hide']()
 	}
@@ -257,7 +255,7 @@ BootStrap.Modal.prototype = {
 			callback()
 		}
 	}
-}
+});
 
 
 
