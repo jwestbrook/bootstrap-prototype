@@ -30,13 +30,12 @@ http://github.com/jwestbrook/bootstrap-prototype
   "use strict"; // jshint ;_;
 if(BootStrap === undefined)
 {
-	var BootStrap = {};
+  var BootStrap = {};
 }
 
 
  /* BUTTON PUBLIC CLASS DEFINITION
   * ============================== */
-
   BootStrap.Button = Class.create({
     initialize : function (element, options) {
       this.$element = $(element)
@@ -88,9 +87,9 @@ if(BootStrap === undefined)
   * =============== */
 
 document.observe("dom:loaded",function(){
-	$$("[data-toggle^=button]").invoke("observe","click",function(e){
-		var $btn = e.findElement()
-		if(!$btn.hasClassName('btn')) $btn = $btn.up('.btn')
-		new BootStrap.Button($btn,'toggle')
-	});
+  $$("[data-toggle^=button]").invoke("observe","click",function(e){
+    var $btn = e.findElement()
+    if(!$btn.hasClassName('btn')) $btn = $btn.up('.btn')
+    new BootStrap.Button($btn,'toggle')
+  });
 })

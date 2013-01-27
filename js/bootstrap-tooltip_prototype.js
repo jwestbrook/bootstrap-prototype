@@ -17,6 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ========================================================== */
+/*
+
+Modified for use with PrototypeJS
+
+http://github.com/jwestbrook/bootstrap-prototype
+
+
+*/
 
 
   "use strict"; // jshint ;_;
@@ -265,10 +273,6 @@ BootStrap.Tooltip = Class.create({
 	}
 
 });
-
-
- /* TOOLTIP PLUGIN DEFINITION
-  * ========================= */
 
 document.observe('dom:loaded',function(){
 	$$('.tooltip').each(function(el){

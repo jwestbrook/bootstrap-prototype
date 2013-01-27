@@ -31,13 +31,12 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 if(BootStrap === undefined)
 {
-	var BootStrap = {};
+  var BootStrap = {};
 }
 
 
  /* DROPDOWN CLASS DEFINITION
   * ========================= */
-
   var toggle = '[data-toggle=dropdown]';
   BootStrap.Dropdown = Class.create({
     initialize : function (element) {
@@ -106,20 +105,41 @@ if(BootStrap === undefined)
     }
     
   });
+    
+  function clearMenus() {
+    $$(toggle).each(function(i) {
+    getParent(i).removeClassName('open')
+    })
+  }
+  
+  function getParent($this) {
+    var selector = $this.readAttribute('data-target')
+    , $parent
+    
+    if (!selector) {
+      selector = $this.readAttribute('href')
+      selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#' //strip for ie7
+    }
+    
+    $parent = $$(selector)
+    $parent.length || ($parent = $this.up())
+    
+    return $parent
+  }
 
 
   /* APPLY TO STANDARD DROPDOWN ELEMENTS
    * =================================== */
 document.observe("dom:loaded",function(){
-	document.observe('click',clearMenus)
-	document.observe('touchstart',clearMenus)
-	$$('.dropdown form').invoke('observe','click',function(e){
-		e.stop();
-	});
-	$$('.dropdown form').invoke('observe','touchstart',function(e){
-		e.stop();
-	});
-	$$(toggle).invoke('observe','click',BootStrap.Dropdown.prototype.toggle)
-	$$(toggle).invoke('observe','touchstart',BootStrap.Dropdown.prototype.toggle)
-	$$(toggle+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)
+  document.observe('click',clearMenus)
+  document.observe('touchstart',clearMenus)
+  $$('.dropdown form').invoke('observe','click',function(e){
+    e.stop();
+  });
+  $$('.dropdown form').invoke('observe','touchstart',function(e){
+    e.stop();
+  });
+  $$(toggle).invoke('observe','click',BootStrap.Dropdown.prototype.toggle)
+  $$(toggle).invoke('observe','touchstart',BootStrap.Dropdown.prototype.toggle)
+  $$(toggle+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)
 });
