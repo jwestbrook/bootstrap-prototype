@@ -88,7 +88,7 @@ if(BootStrap === undefined)
 			else if(transition && BootStrap.handleeffects == 'effect')
 			{
 				new Effect.Parallel([
-					new Effect.Morph(that.$element,{sync:true,style:'top:50%'}),
+					new Effect.Morph(that.$element,{sync:true,style:'top:10%'}),
 					new Effect.Opacity(that.$element,{sync:true,from:0,to:1})
 					],{duration:0.3,afterFinish:function(){
 						that.$element.addClassName('in').writeAttribute('aria-hidden', false)
@@ -178,10 +178,13 @@ if(BootStrap === undefined)
 	}
 	
 	, hideModal: function () {
-		this.$element.fire('bootstrap:hidden')
-		this.backdrop()
+		this.$element.hide()
+		this.backdrop(function(){
+			this.removeBackdrop()
+			this.$element.fire('bootstrap:hidden')
+		}.bind(this))
+
 	}
-	
 	, removeBackdrop: function () {
 		this.$backdrop.remove()
 		this.$backdrop = null
@@ -232,7 +235,7 @@ if(BootStrap === undefined)
 			if(animate && BootStrap.handleeffects == 'css')
 			{
 				that.$backdrop.observe(BootStrap.transitionendevent,function(){
-					that.removeBackdrop()
+					callback()
 				});
 				setTimeout(function(){
 					that.$backdrop.removeClassName('in')
@@ -242,13 +245,13 @@ if(BootStrap === undefined)
 			{
 				new Effect.Fade(that.$backdrop,{duration:0.3,from:that.$backdrop.getOpacity()*1,afterFinish:function(){
 					that.$backdrop.removeClassName('in')
-					that.removeBackdrop()
+					callback()
 				}})
 			}
 			else
 			{
 				that.$backdrop.removeClassName('in')
-				that.removeBackdrop()
+				callback()
 			}
 		
 		} else if (callback) {
