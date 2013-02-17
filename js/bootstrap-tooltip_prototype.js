@@ -1,5 +1,5 @@
 /* ===========================================================
- * bootstrap-tooltip.js v2.2.2
+ * bootstrap-tooltip.js v2.3.0
  * http://twitter.github.com/bootstrap/javascript.html#tooltips
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ===========================================================
@@ -47,10 +47,11 @@ BootStrap.Tooltip = Class.create({
 			, placement: 'top'
 			, selector: false
 			, template: new Element('div',{'class':'tooltip'}).insert(new Element('div',{'class':'tooltip-arrow'})).insert(new Element('div',{'class':'tooltip-inner'}))
-			, trigger: 'hover'
+			, trigger: 'hover focus'
 			, title: ''
 			, delay: 0
 			, html: false
+			, container: false
 		};
 		Object.extend(this.options,options);
 		if (this.options.delay && typeof this.options.delay == 'number') {
@@ -64,20 +65,28 @@ BootStrap.Tooltip = Class.create({
 	, init: function (type, element) {
 		var eventIn
 		, eventOut
+		, triggers
+		, trigger
+		, i
+		
 		
 		this.type = type
 		this.$element = $(element)
 		this.enabled = true
 		
-		if (this.options.trigger == 'click') {
-			this.$element.observe('click', this.toggle.bind(this))
-		} else if (this.options.trigger != 'manual') {
-			eventIn = this.options.trigger == 'hover' ? 'mouseenter' : 'focus'
-			eventOut = this.options.trigger == 'hover' ? 'mouseleave' : 'blur'
-			this.$element.observe(eventIn, this.enter.bind(this))
-			this.$element.observe(eventOut, this.leave.bind(this))
-		}
+		triggers = this.options.trigger.split(' ')
 		
+		triggers.each(function(tr){
+			if(tr == 'click') {
+				this.$element.observe('click', this.toggle.bind(this))
+			} else if (tr != 'manual') {
+				eventIn = tr == 'hover' ? 'mouseenter' : 'focus'
+				eventOut = tr == 'hover' ? 'mouseleave' : 'blur'
+				this.$element.observe(eventIn, this.enter.bind(this))
+				this.$element.observe(eventOut, this.leave.bind(this))
+			}
+		},this)
+
 		if(this.options.selector){
 			this._options = Object.extend({},this.options)
 			Object.extend(this._options,{ trigger: 'manual', selector: '' })
@@ -113,7 +122,6 @@ BootStrap.Tooltip = Class.create({
 	
 	, show: function () {
 		var $tip
-		, inside
 		, pos
 		, actualWidth
 		, actualHeight
@@ -122,6 +130,7 @@ BootStrap.Tooltip = Class.create({
 		, layout
 		
 		if (this.hasContent() && this.enabled) {
+			this.$element.fire('bootstrap:show')
 			$tip = this.tip()
 			this.setContent()
 			
@@ -133,18 +142,16 @@ BootStrap.Tooltip = Class.create({
 			this.options.placement.call(this, $tip[0], this.$element[0]) :
 			this.options.placement
 			
-			inside = /in/.test(placement)
-			
 			$tip.setStyle({ top: 0, left: 0, display: 'block' })
 
-			this.$element.insert({'after':$tip})
+			this.options.container ? this.options.container.insert($tip) : this.$element.insert({'after':$tip})
 			
-			pos = this.getPosition(inside)
+			pos = this.getPosition()
 			
 			actualWidth = $tip.offsetWidth
 			actualHeight = $tip.offsetHeight
 			
-			switch (inside ? placement.split(' ')[1] : placement) {
+			switch (placement) {
 				case 'bottom':
 					tp = {top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2}
 				break
@@ -161,14 +168,68 @@ BootStrap.Tooltip = Class.create({
 			tp.top = tp.top+'px'
 			tp.left = tp.left+'px'
 			
-			$tip
-			.setStyle(tp)
-			.addClassName(placement)
-			.addClassName('in')
+			this.applyPlacement(tp,placement)
+			this.$element.fire('bootstrap:shown')
 			
 		}
 	}
-	
+	, applyPlacement: function(offset, placement){
+		
+		var $tip = this.tip()
+			, width = $tip.offsetWidth
+			, height = $tip.offsetHeight
+			, actualWidth
+			, actualHeight
+			, delta
+			, replace
+		
+		$tip
+			.setStyle(offset)
+			.addClassName(placement)
+			.addClassName('in')
+			
+		offset.top = offset.top.replace('px','')*1
+		offset.left = offset.left.replace('px','')*1
+		
+		actualWidth = $tip.offsetWidth
+		actualHeight = $tip.offsetHeight
+		
+		if (placement == 'top' && actualHeight != height) {
+			offset.top = offset.top + height - actualHeight
+			replace = true
+		}
+		
+		if (placement == 'bottom' || placement == 'top') {
+			delta = 0
+			
+			if (offset.left < 0){
+				delta = offset.left * -2
+				offset.left = 0
+				offset.top += 'px'
+				offset.left += 'px'
+				$tip.setStyle(offset)
+				actualWidth = $tip.offsetWidth
+				actualHeight = $tip.offsetHeight
+			}
+			
+			this.replaceArrow(delta - width + actualWidth, actualWidth, 'left')
+		} else {
+			this.replaceArrow(actualHeight - height, actualHeight, 'top')
+		}
+
+		if(typeof offset.top == 'srting' && !offset.top.match(/px/)){
+			offset.top += 'px'
+			offset.left += 'px'
+		}
+		if (replace) $tip.setStyle(offset)
+	}
+	, replaceArrow: function(delta, dimension, position){
+		this
+			.arrow()
+			.setStyle({
+				position : (delta ? (50 * (1 - delta / dimension) + "%") : '')
+			})
+	}	
 	, setContent: function () {
 		var $tip = this.tip()
 		, title = this.getTitle()
@@ -194,16 +255,19 @@ BootStrap.Tooltip = Class.create({
 				clearTimeout(timeout)
 				$tip ? $tip.remove() : ''
 				this.stopObserving(BootStrap.transitionendevent)
+				that.$element.fire('bootrap:hidden')
 			})
 			$tip.removeClassName('in')
 		}else if(BootStrap.handleeffects == 'effect' && this.$tip.hasClassName('fade')){
 			new Effect.Fade($tip,{duration:0.3,from:$tip.getOpacity()*1,afterFinish:function(){
 				$tip.removeClassName('in')
 				$tip.remove()
+				that.$element.fire('bootrap:hidden')
 			}})
 		} else {
 			$tip.removeClassName('in')
 			$tip.remove()
+			this.$element.fire('bootrap:hidden')
 		}
 		
 		return this
@@ -219,18 +283,18 @@ BootStrap.Tooltip = Class.create({
 	, hasContent: function () {
 		return this.getTitle()
 	}
-	
-	, getPosition: function (inside) {
+	, getPosition: function () {
+		var el = this.$element
 		var obj = {}
-		if(inside){
-			Object.extend(obj,{top:0,left:0})
-		}else{
-			Object.extend(obj,this.$element.cumulativeOffset())
+		if(typeof el.getBoundingClientRect == 'function'){
+			Object.extend(obj,el.getBoundingClientRect())
+		} else {
+			Object.extend(obj,{
+				width: el.offsetWidth
+				, height: el.offsetHeight
+			})
 		}
-		return Object.extend(obj,{
-			width: this.$element.offsetWidth
-			, height: this.$element.offsetHeight
-		})
+		return Object.extend(obj,el.cumulativeOffset())
 	}
 	
 	, getTitle: function () {
@@ -247,7 +311,9 @@ BootStrap.Tooltip = Class.create({
 	, tip: function () {
 		return this.$tip = this.$tip || this.options.template
 	}
-	
+	, arrow: function(){
+		return this.$arrow = this.$arrow || this.tip().select(".tooltip-arrow")[0]
+	}
 	, validate: function () {
 		if (!this.$element[0].parentNode) {
 			this.hide()
@@ -265,8 +331,8 @@ BootStrap.Tooltip = Class.create({
 		this.enabled = !this.enabled
 	}
 	, toggle: function (e) {
-		var self = $(e.currentTarget)[this.type](this._options).data(this.type)
-		self[self.tip().hasClassName('in') ? 'hide' : 'show']()
+		var self = e ? $(e.currentTarget)[this.type](this._options).data(this.type) : this
+		self.tip().hasClassName('in') ? self.hide() : self.show()		
 	}
 	, destroy: function () {
 		this.hide().$element.stopObserving()
@@ -274,7 +340,8 @@ BootStrap.Tooltip = Class.create({
 
 });
 
-document.observe('dom:loaded',function(){
+
+ document.observe('dom:loaded',function(){
 	$$('.tooltip').each(function(el){
 		new BootStrap.Tooltip(el);
 	});
