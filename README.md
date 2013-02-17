@@ -24,5 +24,5 @@ Modules written and version compatible with
 
 
 
-[Official Twitter Bootstrap README](Official Bootstrap README.md)
+[Official Twitter Bootstrap README](https://github.com/jwestbrook/bootstrap-prototype/blob/master/Offical%20Bootstrap%20README.md)
 
