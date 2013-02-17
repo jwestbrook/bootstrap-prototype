@@ -1,5 +1,5 @@
 /* ===========================================================
- * bootstrap-tooltip.js v2.2.2
+ * bootstrap-tooltip.js v2.3.0
  * http://twitter.github.com/bootstrap/javascript.html#tooltips
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ===========================================================
@@ -98,142 +98,155 @@ BootStrap.Alert = Class.create({
 				removeElement()
 			}})
 		}
+
 	}
 });
+
 BootStrap.Button = Class.create({
-	initialize : function (element, options) {
-		this.$element = $(element)
-		if(typeof options == 'object')
-		{
-			this.options = options
-			this.options.loadingText = typeof this.options.loadingText != 'undefined' ? options.loadingText : ''
-		}
-		else if(typeof options != 'undefined' && options == 'toggle')
-		{
-			this.toggle()
-		}
-		else if (typeof options != 'undefined'){
-			this.setState(options)
-		}
-	
-	},
-	setState : function (state) {
-		var d = 'disabled'
-		, $el = this.$element
-		, data = $el.gethtml5data()
-		, val = $el.readAttribute('type') == 'input' ? 'value' : 'innerHTML'
-		
-		state = state + 'Text'
-		data.resetText || $el.sethtml5data('resetText',$el[val])
-		
-		$el[val] = (data[state] || this.options[state])
-		
-		// push to event loop to allow forms to submit
-		setTimeout(function () {
-			state == 'loadingText' ?
-			$el.addClassName(d).writeAttribute(d,true) :
-			$el.removeClassName(d).writeAttribute(d,false)
-		}, 0)
-	},
-	toggle : function () {
-		var $parent = this.$element.up('[data-toggle="buttons-radio"]')
-		
-		$parent && $parent
-		.select('.active')
-		.invoke('removeClassName','active')
-		
-		this.$element.toggleClassName('active')
-	}
+initialize : function (element, options) {
+  this.$element = $(element)
+  if(typeof options == 'object')
+  {
+    this.options = options
+    this.options.loadingText = typeof this.options.loadingText != 'undefined' ? options.loadingText : ''
+  }
+  else if(typeof options != 'undefined' && options == 'toggle')
+  {
+    this.toggle()
+  }
+  else if (typeof options != 'undefined'){
+    this.setState(options)
+  }
+
+},
+setState : function (state) {
+  var d = 'disabled'
+  , $el = this.$element
+  , data = $el.gethtml5data()
+  , val = $el.readAttribute('type') == 'input' ? 'value' : 'innerHTML'
+  
+  state = state + 'Text'
+  data.resetText || $el.sethtml5data('resetText',$el[val])
+  
+  $el[val] = (data[state] || this.options[state])
+  
+  // push to event loop to allow forms to submit
+  setTimeout(function () {
+    state == 'loadingText' ?
+    $el.addClassName(d).writeAttribute(d,true) :
+    $el.removeClassName(d).writeAttribute(d,false)
+  }, 0)
+},
+toggle : function () {
+  var $parent = this.$element.up('[data-toggle="buttons-radio"]')
+  
+  $parent && $parent
+  .select('.active')
+  .invoke('removeClassName','active')
+  
+  this.$element.toggleClassName('active')
+}
 });
+
 var toggle = '[data-toggle=dropdown]';
 BootStrap.Dropdown = Class.create({
-	initialize : function (element) {
-		var $el = $(element).on('click',this.toggle)
-		$$('html')[0].on('click', function () {
-		$el.up().removeClassName('open')
-		})
-	}
-	,toggle: function (e) {
-		var $this = $(this)
-		, $parent
-		, isActive
-		
-		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
-		
-		$parent = getParent($this)
-		
-		isActive = $parent.hasClassName('open')
-		
-		clearMenus()
-		
-		if (!isActive) {
-			$parent.toggleClassName('open')
-			$this.focus()
-		}
-		
-		e.stop()
-	}
-	, keydown: function (e) {
-		var $this
-		, $items
-		, $active
-		, $parent
-		, isActive
-		, index
-		
-		if (!/(38|40|27)/.test(e.keyCode)) return
-		
-		$this = $(this)
-		
-		e.preventDefault()
-		e.stopPropagation()
-		
-		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
-		
-		$parent = getParent($this)
-		
-		isActive = $parent.hasClassName('open')
-		
-		if (!isActive || (isActive && e.keyCode == Event.KEY_ESC)) return $this.click()
-		
-		$items = $parent.select('[role=menu] li:not(.divider) a')
-		
-		if (!$items.length) return
-		
-		index = -1
-		$items.each(function(item,i){
-			item.match(':focus') ? index = i : ''
-		})
-		
-		if (e.keyCode == Event.KEY_UP && index > 0) index--                                        // up
-		if (e.keyCode == Event.KEY_DOWN && index < $items.length - 1) index++                        // down
-		if (!~index) index = 0
-		
-		$items[index].focus()
-	}
-	
+initialize : function (element) {
+  var $el = $(element).on('click',this.toggle)
+  $$('html')[0].on('click', function () {
+  $el.up().removeClassName('open')
+  })
+}
+,toggle: function (e) {
+  var $this = $(this)
+  , $parent
+  , isActive
+  
+  if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
+  
+  $parent = getParent($this)
+  
+  isActive = $parent.hasClassName('open')
+  
+  clearMenus()
+  
+  if (!isActive) {
+    $parent.toggleClassName('open')
+  }
+
+  $this.focus()
+  
+  e.stop()
+}
+, keydown: function (e) {
+  var $this
+  , $items
+  , $active
+  , $parent
+  , isActive
+  , index
+  
+  if (!/(38|40|27)/.test(e.keyCode)) return
+  
+  $this = $(this)
+  
+  e.preventDefault()
+  e.stopPropagation()
+  
+  if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
+  
+  $parent = getParent($this)
+  
+  isActive = $parent.hasClassName('open')
+  
+  if (!isActive || (isActive && e.keyCode == Event.KEY_ESC))
+  {
+    if (e.which == Event.KEY_ESC) $parent.select(toggle)[0].focus()
+    return $this.click()
+  }     
+  
+// :visible is a jQuery extension - NOT VALID CSS
+//      $items = $parent.select('[role=menu] li:not(.divider):visible a')
+//
+  $items = $parent.select('[role=menu] li:not(.divider) a')
+
+  if (!$items.length) return
+  
+  index = -1
+  $items.each(function(item,i){
+    item.match(':focus') ? index = i : ''
+  })
+  
+  if (e.keyCode == Event.KEY_UP && index > 0) index--                                        // up
+  if (e.keyCode == Event.KEY_DOWN && index < $items.length - 1) index++                        // down
+  if (!~index) index = 0
+  
+  $items[index].focus()
+}
+
 });
+
 function clearMenus() {
-	$$(toggle).each(function(i) {
-	getParent(i).removeClassName('open')
-	})
+$$(toggle).each(function(i) {
+getParent(i).removeClassName('open')
+})
 }
 
 function getParent($this) {
-	var selector = $this.readAttribute('data-target')
-	, $parent
-	
-	if (!selector) {
-		selector = $this.readAttribute('href')
-		selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#' //strip for ie7
-	}
-	
-	$parent = $$(selector)
-	$parent.length || ($parent = $this.up())
-	
-	return $parent
+var selector = $this.readAttribute('data-target')
+, $parent
+
+if (!selector) {
+  selector = $this.readAttribute('href')
+  selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#' //strip for ie7
 }
-BootStrap.Modal = Class.create({
+
+$parent = selector && $$(selector)
+
+if (!$parent || !$parent.length) $parent = $this.up()
+
+return $parent
+}
+	BootStrap.Modal = Class.create({
 	initialize : function (element, options) {
 		this.$element = $(element);
 		this.options = options
@@ -287,7 +300,7 @@ BootStrap.Modal = Class.create({
 			else if(transition && BootStrap.handleeffects == 'effect')
 			{
 				new Effect.Parallel([
-					new Effect.Morph(that.$element,{sync:true,style:'top:50%'}),
+					new Effect.Morph(that.$element,{sync:true,style:'top:10%'}),
 					new Effect.Opacity(that.$element,{sync:true,from:0,to:1})
 					],{duration:0.3,afterFinish:function(){
 						that.$element.addClassName('in').writeAttribute('aria-hidden', false)
@@ -377,10 +390,13 @@ BootStrap.Modal = Class.create({
 	}
 	
 	, hideModal: function () {
-		this.$element.fire('bootstrap:hidden')
-		this.backdrop()
+		this.$element.hide()
+		this.backdrop(function(){
+			this.removeBackdrop()
+			this.$element.fire('bootstrap:hidden')
+		}.bind(this))
+
 	}
-	
 	, removeBackdrop: function () {
 		this.$backdrop.remove()
 		this.$backdrop = null
@@ -431,7 +447,7 @@ BootStrap.Modal = Class.create({
 			if(animate && BootStrap.handleeffects == 'css')
 			{
 				that.$backdrop.observe(BootStrap.transitionendevent,function(){
-					that.removeBackdrop()
+					callback()
 				});
 				setTimeout(function(){
 					that.$backdrop.removeClassName('in')
@@ -441,13 +457,13 @@ BootStrap.Modal = Class.create({
 			{
 				new Effect.Fade(that.$backdrop,{duration:0.3,from:that.$backdrop.getOpacity()*1,afterFinish:function(){
 					that.$backdrop.removeClassName('in')
-					that.removeBackdrop()
+					callback()
 				}})
 			}
 			else
 			{
 				that.$backdrop.removeClassName('in')
-				that.removeBackdrop()
+				callback()
 			}
 		
 		} else if (callback) {
@@ -464,10 +480,11 @@ BootStrap.Tooltip = Class.create({
 			, placement: 'top'
 			, selector: false
 			, template: new Element('div',{'class':'tooltip'}).insert(new Element('div',{'class':'tooltip-arrow'})).insert(new Element('div',{'class':'tooltip-inner'}))
-			, trigger: 'hover'
+			, trigger: 'hover focus'
 			, title: ''
 			, delay: 0
 			, html: false
+			, container: false
 		};
 		Object.extend(this.options,options);
 		if (this.options.delay && typeof this.options.delay == 'number') {
@@ -481,20 +498,28 @@ BootStrap.Tooltip = Class.create({
 	, init: function (type, element) {
 		var eventIn
 		, eventOut
+		, triggers
+		, trigger
+		, i
+		
 		
 		this.type = type
 		this.$element = $(element)
 		this.enabled = true
 		
-		if (this.options.trigger == 'click') {
-			this.$element.observe('click', this.toggle.bind(this))
-		} else if (this.options.trigger != 'manual') {
-			eventIn = this.options.trigger == 'hover' ? 'mouseenter' : 'focus'
-			eventOut = this.options.trigger == 'hover' ? 'mouseleave' : 'blur'
-			this.$element.observe(eventIn, this.enter.bind(this))
-			this.$element.observe(eventOut, this.leave.bind(this))
-		}
+		triggers = this.options.trigger.split(' ')
 		
+		triggers.each(function(tr){
+			if(tr == 'click') {
+				this.$element.observe('click', this.toggle.bind(this))
+			} else if (tr != 'manual') {
+				eventIn = tr == 'hover' ? 'mouseenter' : 'focus'
+				eventOut = tr == 'hover' ? 'mouseleave' : 'blur'
+				this.$element.observe(eventIn, this.enter.bind(this))
+				this.$element.observe(eventOut, this.leave.bind(this))
+			}
+		},this)
+
 		if(this.options.selector){
 			this._options = Object.extend({},this.options)
 			Object.extend(this._options,{ trigger: 'manual', selector: '' })
@@ -530,7 +555,6 @@ BootStrap.Tooltip = Class.create({
 	
 	, show: function () {
 		var $tip
-		, inside
 		, pos
 		, actualWidth
 		, actualHeight
@@ -539,6 +563,7 @@ BootStrap.Tooltip = Class.create({
 		, layout
 		
 		if (this.hasContent() && this.enabled) {
+			this.$element.fire('bootstrap:show')
 			$tip = this.tip()
 			this.setContent()
 			
@@ -550,18 +575,16 @@ BootStrap.Tooltip = Class.create({
 			this.options.placement.call(this, $tip[0], this.$element[0]) :
 			this.options.placement
 			
-			inside = /in/.test(placement)
-			
 			$tip.setStyle({ top: 0, left: 0, display: 'block' })
 
-			this.$element.insert({'after':$tip})
+			this.options.container ? this.options.container.insert($tip) : this.$element.insert({'after':$tip})
 			
-			pos = this.getPosition(inside)
+			pos = this.getPosition()
 			
 			actualWidth = $tip.offsetWidth
 			actualHeight = $tip.offsetHeight
 			
-			switch (inside ? placement.split(' ')[1] : placement) {
+			switch (placement) {
 				case 'bottom':
 					tp = {top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2}
 				break
@@ -578,14 +601,68 @@ BootStrap.Tooltip = Class.create({
 			tp.top = tp.top+'px'
 			tp.left = tp.left+'px'
 			
-			$tip
-			.setStyle(tp)
-			.addClassName(placement)
-			.addClassName('in')
+			this.applyPlacement(tp,placement)
+			this.$element.fire('bootstrap:shown')
 			
 		}
 	}
-	
+	, applyPlacement: function(offset, placement){
+		
+		var $tip = this.tip()
+			, width = $tip.offsetWidth
+			, height = $tip.offsetHeight
+			, actualWidth
+			, actualHeight
+			, delta
+			, replace
+		
+		$tip
+			.setStyle(offset)
+			.addClassName(placement)
+			.addClassName('in')
+			
+		offset.top = offset.top.replace('px','')*1
+		offset.left = offset.left.replace('px','')*1
+		
+		actualWidth = $tip.offsetWidth
+		actualHeight = $tip.offsetHeight
+		
+		if (placement == 'top' && actualHeight != height) {
+			offset.top = offset.top + height - actualHeight
+			replace = true
+		}
+		
+		if (placement == 'bottom' || placement == 'top') {
+			delta = 0
+			
+			if (offset.left < 0){
+				delta = offset.left * -2
+				offset.left = 0
+				offset.top += 'px'
+				offset.left += 'px'
+				$tip.setStyle(offset)
+				actualWidth = $tip.offsetWidth
+				actualHeight = $tip.offsetHeight
+			}
+			
+			this.replaceArrow(delta - width + actualWidth, actualWidth, 'left')
+		} else {
+			this.replaceArrow(actualHeight - height, actualHeight, 'top')
+		}
+
+		if(typeof offset.top == 'srting' && !offset.top.match(/px/)){
+			offset.top += 'px'
+			offset.left += 'px'
+		}
+		if (replace) $tip.setStyle(offset)
+	}
+	, replaceArrow: function(delta, dimension, position){
+		this
+			.arrow()
+			.setStyle({
+				position : (delta ? (50 * (1 - delta / dimension) + "%") : '')
+			})
+	}	
 	, setContent: function () {
 		var $tip = this.tip()
 		, title = this.getTitle()
@@ -611,16 +688,19 @@ BootStrap.Tooltip = Class.create({
 				clearTimeout(timeout)
 				$tip ? $tip.remove() : ''
 				this.stopObserving(BootStrap.transitionendevent)
+				that.$element.fire('bootrap:hidden')
 			})
 			$tip.removeClassName('in')
 		}else if(BootStrap.handleeffects == 'effect' && this.$tip.hasClassName('fade')){
 			new Effect.Fade($tip,{duration:0.3,from:$tip.getOpacity()*1,afterFinish:function(){
 				$tip.removeClassName('in')
 				$tip.remove()
+				that.$element.fire('bootrap:hidden')
 			}})
 		} else {
 			$tip.removeClassName('in')
 			$tip.remove()
+			this.$element.fire('bootrap:hidden')
 		}
 		
 		return this
@@ -636,18 +716,18 @@ BootStrap.Tooltip = Class.create({
 	, hasContent: function () {
 		return this.getTitle()
 	}
-	
-	, getPosition: function (inside) {
+	, getPosition: function () {
+		var el = this.$element
 		var obj = {}
-		if(inside){
-			Object.extend(obj,{top:0,left:0})
-		}else{
-			Object.extend(obj,this.$element.cumulativeOffset())
+		if(typeof el.getBoundingClientRect == 'function'){
+			Object.extend(obj,el.getBoundingClientRect())
+		} else {
+			Object.extend(obj,{
+				width: el.offsetWidth
+				, height: el.offsetHeight
+			})
 		}
-		return Object.extend(obj,{
-			width: this.$element.offsetWidth
-			, height: this.$element.offsetHeight
-		})
+		return Object.extend(obj,el.cumulativeOffset())
 	}
 	
 	, getTitle: function () {
@@ -664,7 +744,9 @@ BootStrap.Tooltip = Class.create({
 	, tip: function () {
 		return this.$tip = this.$tip || this.options.template
 	}
-	
+	, arrow: function(){
+		return this.$arrow = this.$arrow || this.tip().select(".tooltip-arrow")[0]
+	}
 	, validate: function () {
 		if (!this.$element[0].parentNode) {
 			this.hide()
@@ -682,8 +764,8 @@ BootStrap.Tooltip = Class.create({
 		this.enabled = !this.enabled
 	}
 	, toggle: function (e) {
-		var self = $(e.currentTarget)[this.type](this._options).data(this.type)
-		self[self.tip().hasClassName('in') ? 'hide' : 'show']()
+		var self = e ? $(e.currentTarget)[this.type](this._options).data(this.type) : this
+		self.tip().hasClassName('in') ? self.hide() : self.show()		
 	}
 	, destroy: function () {
 		this.hide().$element.stopObserving()
@@ -777,6 +859,7 @@ BootStrap.Tab = Class.create({
 		
 	}
 });
+
 //run all dom:loaded at end
 
 document.observe("dom:loaded",function(){
@@ -787,23 +870,18 @@ document.observe("dom:loaded",function(){
 	})
 
 	//BootStrap.Button
-	$$("[data-toggle^=button]").invoke("observe","click",function(e){
-		var $btn = e.findElement()
-		if(!$btn.hasClassName('btn')) $btn = $btn.up('.btn')
-		new BootStrap.Button($btn,'toggle')
-	});
+	  $$("[data-toggle^=button]").invoke("observe","click",function(e){
+	    var $btn = e.findElement()
+	    if(!$btn.hasClassName('btn')) $btn = $btn.up('.btn')
+	    new BootStrap.Button($btn,'toggle')
+	  });
 
 	//Bootstrap.Dropdown
 	document.observe('click',clearMenus)
-	document.observe('touchstart',clearMenus)
 	$$('.dropdown form').invoke('observe','click',function(e){
 		e.stop();
 	});
-	$$('.dropdown form').invoke('observe','touchstart',function(e){
-		e.stop();
-	});
 	$$(toggle).invoke('observe','click',BootStrap.Dropdown.prototype.toggle)
-	$$(toggle).invoke('observe','touchstart',BootStrap.Dropdown.prototype.toggle)
 	$$(toggle+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)
 	
 	//Bootstrap.Modal
