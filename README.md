@@ -24,5 +24,5 @@ Modules written and version compatible with
 
 
 
-[Official Twitter Bootstrap README](Official Bootstrap README)
+[Official Twitter Bootstrap README](Official Bootstrap README.md)
 
