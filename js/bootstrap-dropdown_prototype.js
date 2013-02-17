@@ -60,8 +60,9 @@ if(BootStrap === undefined)
       
       if (!isActive) {
         $parent.toggleClassName('open')
-        $this.focus()
       }
+
+      $this.focus()
       
       e.stop()
     }
@@ -86,10 +87,17 @@ if(BootStrap === undefined)
       
       isActive = $parent.hasClassName('open')
       
-      if (!isActive || (isActive && e.keyCode == Event.KEY_ESC)) return $this.click()
+      if (!isActive || (isActive && e.keyCode == Event.KEY_ESC))
+      {
+        if (e.which == Event.KEY_ESC) $parent.select(toggle)[0].focus()
+        return $this.click()
+      }     
       
+// :visible is a jQuery extension - NOT VALID CSS
+//      $items = $parent.select('[role=menu] li:not(.divider):visible a')
+//
       $items = $parent.select('[role=menu] li:not(.divider) a')
-      
+
       if (!$items.length) return
       
       index = -1
@@ -121,8 +129,9 @@ if(BootStrap === undefined)
       selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#' //strip for ie7
     }
     
-    $parent = $$(selector)
-    $parent.length || ($parent = $this.up())
+    $parent = selector && $$(selector)
+
+    if (!$parent || !$parent.length) $parent = $this.up()
     
     return $parent
   }
@@ -132,14 +141,9 @@ if(BootStrap === undefined)
    * =================================== */
 document.observe("dom:loaded",function(){
   document.observe('click',clearMenus)
-  document.observe('touchstart',clearMenus)
   $$('.dropdown form').invoke('observe','click',function(e){
     e.stop();
   });
-  $$('.dropdown form').invoke('observe','touchstart',function(e){
-    e.stop();
-  });
   $$(toggle).invoke('observe','click',BootStrap.Dropdown.prototype.toggle)
-  $$(toggle).invoke('observe','touchstart',BootStrap.Dropdown.prototype.toggle)
   $$(toggle+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)
 });
