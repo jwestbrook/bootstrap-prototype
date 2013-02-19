@@ -19,6 +19,7 @@ Modules written and version compatible with
 	<tr><td>BootStrap.Modal</td><td>2.3.0</td></tr>
 	<tr><td>BootStrap.Tab</td><td>2.3.0</td></tr>
 	<tr><td>BootStrap.Tooltip</td><td>2.3.0</td></tr>
+	<tr><td>BootStrap.Popover</td><td>2.3.0</td></tr>
 	<tr><td>BootStrap.Transition</td><td>2.3.0</td></tr>
 </table>
 
