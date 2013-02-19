@@ -60,7 +60,10 @@ BootStrap.Tooltip = Class.create({
 				, hide: options.delay
 			}
 		}
-		this.init('tooltip', element)
+		if(this.options.subclass == undefined)
+		{
+			this.init('tooltip', element)
+		}
 	}
 	, init: function (type, element) {
 		var eventIn
@@ -224,11 +227,9 @@ BootStrap.Tooltip = Class.create({
 		if (replace) $tip.setStyle(offset)
 	}
 	, replaceArrow: function(delta, dimension, position){
-		this
-			.arrow()
-			.setStyle({
-				position : (delta ? (50 * (1 - delta / dimension) + "%") : '')
-			})
+		this.arrow().length ? this.arrow()[0].setStyle({
+												position : (delta ? (50 * (1 - delta / dimension) + "%") : '')
+												}) : ''
 	}	
 	, setContent: function () {
 		var $tip = this.tip()
@@ -312,7 +313,7 @@ BootStrap.Tooltip = Class.create({
 		return this.$tip = this.$tip || this.options.template
 	}
 	, arrow: function(){
-		return this.$arrow = this.$arrow || this.tip().select(".tooltip-arrow")[0]
+		return this.$arrow = this.$arrow || this.tip().select(".tooltip-arrow")
 	}
 	, validate: function () {
 		if (!this.$element[0].parentNode) {
@@ -331,8 +332,7 @@ BootStrap.Tooltip = Class.create({
 		this.enabled = !this.enabled
 	}
 	, toggle: function (e) {
-		var self = e ? $(e.currentTarget)[this.type](this._options).data(this.type) : this
-		self.tip().hasClassName('in') ? self.hide() : self.show()		
+		this.tip().hasClassName('in') ? this.hide() : this.show()		
 	}
 	, destroy: function () {
 		this.hide().$element.stopObserving()
@@ -341,7 +341,10 @@ BootStrap.Tooltip = Class.create({
 });
 
 
- document.observe('dom:loaded',function(){
+ /* TOOLTIP PLUGIN DEFINITION
+  * ========================= */
+
+document.observe('dom:loaded',function(){
 	$$('.tooltip').each(function(el){
 		new BootStrap.Tooltip(el);
 	});
