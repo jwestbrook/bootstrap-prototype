@@ -493,7 +493,10 @@ BootStrap.Tooltip = Class.create({
 				, hide: options.delay
 			}
 		}
-		this.init('tooltip', element)
+		if(this.options.subclass == undefined)
+		{
+			this.init('tooltip', element)
+		}
 	}
 	, init: function (type, element) {
 		var eventIn
@@ -657,11 +660,9 @@ BootStrap.Tooltip = Class.create({
 		if (replace) $tip.setStyle(offset)
 	}
 	, replaceArrow: function(delta, dimension, position){
-		this
-			.arrow()
-			.setStyle({
-				position : (delta ? (50 * (1 - delta / dimension) + "%") : '')
-			})
+		this.arrow().length ? this.arrow()[0].setStyle({
+												position : (delta ? (50 * (1 - delta / dimension) + "%") : '')
+												}) : ''
 	}	
 	, setContent: function () {
 		var $tip = this.tip()
@@ -745,7 +746,7 @@ BootStrap.Tooltip = Class.create({
 		return this.$tip = this.$tip || this.options.template
 	}
 	, arrow: function(){
-		return this.$arrow = this.$arrow || this.tip().select(".tooltip-arrow")[0]
+		return this.$arrow = this.$arrow || this.tip().select(".tooltip-arrow")
 	}
 	, validate: function () {
 		if (!this.$element[0].parentNode) {
@@ -764,11 +765,61 @@ BootStrap.Tooltip = Class.create({
 		this.enabled = !this.enabled
 	}
 	, toggle: function (e) {
-		var self = e ? $(e.currentTarget)[this.type](this._options).data(this.type) : this
-		self.tip().hasClassName('in') ? self.hide() : self.show()		
+		this.tip().hasClassName('in') ? this.hide() : this.show()		
 	}
 	, destroy: function () {
 		this.hide().$element.stopObserving()
+	}
+
+});
+BootStrap.Popover = Class.create(BootStrap.Tooltip,{
+	initialize : function ($super,element, options) {
+		$super(element,{subclass:true});
+		Object.extend(this.options,{
+			placement: 'right'
+			, trigger: 'click'
+			, content: ''
+			, template: new Element('div',{'class':'popover'}).insert(new Element('div',{'class':'arrow'})).insert(new Element('h3',{'class':'popover-title'})).insert(new Element('div',{'class':'popover-content'}))
+		});
+		Object.extend(this.options,options)
+		this.init('popover',element,this.options)
+	}
+	, setContent: function () {
+		var $tip = this.tip()
+		, title = this.getTitle()
+		, content = this.getContent()
+		
+		$tip.select('.popover-title')[0].update(title)
+		$tip.select('.popover-content')[0].update(content)
+		
+		$tip.removeClassName('fade top bottom left right in')
+	}
+	
+	, hasContent: function () {
+		return this.getTitle() || this.getContent()
+	}
+	
+	, getContent: function () {
+		var content
+		, $e = this.$element
+		, o = this.options
+		
+		content = (typeof o.content == 'function' ? o.content.call($e[0]) :  o.content)
+		|| $e.readAttribute('data-content')
+		
+		return content
+	}
+	
+	, tip: function () {
+		if (!this.$tip) {
+			this.$tip = this.options.template
+		}
+		return this.$tip
+	}
+	
+	, destroy: function () {
+		this.hide()
+		this.$element.stopObserving(this.options.trigger)
 	}
 
 });
