@@ -60,6 +60,7 @@ if(BootStrap.handleeffects === null && typeof Scriptaculous !== 'undefined' && t
 
 BootStrap.Alert = Class.create({
 	initialize : function (element) {
+		element.store('bootstrap:alert',this)
 		$(element).observe('click',this.close)
 	},
 	close : function (e) {
@@ -69,8 +70,8 @@ BootStrap.Alert = Class.create({
 		  
 	
 		if (!selector) {
-		  selector = $this.href
-		  selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '').replace('#','') //strip for ie7
+			selector = $this.href
+			selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '').replace('#','') //strip for ie7
 		}
 		
 		(selector != undefined && selector.length > 0) ? $parent = $(selector) : '';
@@ -80,8 +81,8 @@ BootStrap.Alert = Class.create({
 		$parent.fire('bootstrap:close')
 	
 		function removeElement() {
-		  $parent.fire('bootstrap:closed')
-		  $parent.remove()
+			$parent.fire('bootstrap:closed')
+			$parent.remove()
 		}
 	
 		if(BootStrap.handleeffects === 'css' && $parent.hasClassName('fade'))
@@ -103,166 +104,166 @@ BootStrap.Alert = Class.create({
 });
 
 BootStrap.Button = Class.create({
-initialize : function (element, options) {
-  this.$element = $(element)
-  if(typeof options == 'object')
-  {
-    this.options = options
-    this.options.loadingText = typeof this.options.loadingText != 'undefined' ? options.loadingText : ''
-  }
-  else if(typeof options != 'undefined' && options == 'toggle')
-  {
-    this.toggle()
-  }
-  else if (typeof options != 'undefined'){
-    this.setState(options)
-  }
+	initialize : function (element, options) {
+		element.store('bootstrap:button',this)
+		this.$element = $(element)
+		if(typeof options == 'object')
+		{
+			this.options = options
+			this.options.loadingText = typeof this.options.loadingText != 'undefined' ? options.loadingText : ''
+		} else if(typeof options != 'undefined' && options == 'toggle') {
+			this.toggle()
+		} else if (typeof options != 'undefined'){
+			this.setState(options)
+		}
 
-},
-setState : function (state) {
-  var d = 'disabled'
-  , $el = this.$element
-  , data = $el.gethtml5data()
-  , val = $el.readAttribute('type') == 'input' ? 'value' : 'innerHTML'
-  
-  state = state + 'Text'
-  data.resetText || $el.sethtml5data('resetText',$el[val])
-  
-  $el[val] = (data[state] || this.options[state])
-  
-  // push to event loop to allow forms to submit
-  setTimeout(function () {
-    state == 'loadingText' ?
-    $el.addClassName(d).writeAttribute(d,true) :
-    $el.removeClassName(d).writeAttribute(d,false)
-  }, 0)
-},
-toggle : function () {
-  var $parent = this.$element.up('[data-toggle="buttons-radio"]')
-  
-  $parent && $parent
-  .select('.active')
-  .invoke('removeClassName','active')
-  
-  this.$element.toggleClassName('active')
-}
+	},
+	setState : function (state) {
+		var d = 'disabled'
+		, $el = this.$element
+		, data = $el.gethtml5data()
+		, val = $el.readAttribute('type') == 'input' ? 'value' : 'innerHTML'
+
+		state = state + 'Text'
+		data.resetText || $el.sethtml5data('resetText',$el[val])
+
+		$el[val] = (data[state] || this.options[state])
+
+		// push to event loop to allow forms to submit
+		setTimeout(function () {
+			state == 'loadingText' ?
+			$el.addClassName(d).writeAttribute(d,true) :
+			$el.removeClassName(d).writeAttribute(d,false)
+		}, 0)
+	},
+	toggle : function () {
+		var $parent = this.$element.up('[data-toggle="buttons-radio"]')
+
+		$parent && $parent
+		.select('.active')
+		.invoke('removeClassName','active')
+
+		this.$element.toggleClassName('active')
+	}
 });
 
 var toggle = '[data-toggle=dropdown]';
 BootStrap.Dropdown = Class.create({
-initialize : function (element) {
-  var $el = $(element).on('click',this.toggle)
-  $$('html')[0].on('click', function () {
-  $el.up().removeClassName('open')
-  })
-}
-,toggle: function (e) {
-  var $this = $(this)
-  , $parent
-  , isActive
-  
-  if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
-  
-  $parent = getParent($this)
-  
-  isActive = $parent.hasClassName('open')
-  
-  clearMenus()
-  
-  if (!isActive) {
-    $parent.toggleClassName('open')
-  }
+	initialize : function (element) {
+		element.store('bootstrap:dropdown',this)
+		var $el = $(element).on('click',this.toggle)
+		$$('html')[0].on('click', function () {
+		$el.up().removeClassName('open')
+		})
+	}
+	,toggle: function (e) {
+		var $this = $(this)
+		, $parent
+		, isActive
 
-  $this.focus()
-  
-  e.stop()
-}
-, keydown: function (e) {
-  var $this
-  , $items
-  , $active
-  , $parent
-  , isActive
-  , index
-  
-  if (!/(38|40|27)/.test(e.keyCode)) return
-  
-  $this = $(this)
-  
-  e.preventDefault()
-  e.stopPropagation()
-  
-  if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
-  
-  $parent = getParent($this)
-  
-  isActive = $parent.hasClassName('open')
-  
-  if (!isActive || (isActive && e.keyCode == Event.KEY_ESC))
-  {
-    if (e.which == Event.KEY_ESC) $parent.select(toggle)[0].focus()
-    return $this.click()
-  }     
-  
-// :visible is a jQuery extension - NOT VALID CSS
-//      $items = $parent.select('[role=menu] li:not(.divider):visible a')
-//
-  $items = $parent.select('[role=menu] li:not(.divider) a')
+		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
 
-  if (!$items.length) return
-  
-  index = -1
-  $items.each(function(item,i){
-    item.match(':focus') ? index = i : ''
-  })
-  
-  if (e.keyCode == Event.KEY_UP && index > 0) index--                                        // up
-  if (e.keyCode == Event.KEY_DOWN && index < $items.length - 1) index++                        // down
-  if (!~index) index = 0
-  
-  $items[index].focus()
-}
+		$parent = getParent($this)
+
+		isActive = $parent.hasClassName('open')
+
+		clearMenus()
+
+		if (!isActive) {
+			$parent.toggleClassName('open')
+		}
+
+		$this.focus()
+
+		e.stop()
+	}
+	, keydown: function (e) {
+		var $this
+		, $items
+		, $active
+		, $parent
+		, isActive
+		, index
+
+		if (!/(38|40|27)/.test(e.keyCode)) return
+
+		$this = $(this)
+
+		e.preventDefault()
+		e.stopPropagation()
+
+		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
+
+		$parent = getParent($this)
+
+		isActive = $parent.hasClassName('open')
+
+		if (!isActive || (isActive && e.keyCode == Event.KEY_ESC))
+		{
+			if (e.which == Event.KEY_ESC) $parent.select(toggle)[0].focus()
+			return $this.click()
+		}
+
+		// :visible is a jQuery extension - NOT VALID CSS
+		//      $items = $parent.select('[role=menu] li:not(.divider):visible a')
+		//
+		$items = $parent.select('[role=menu] li:not(.divider) a')
+
+		if (!$items.length) return
+
+		index = -1
+		$items.each(function(item,i){
+		item.match(':focus') ? index = i : ''
+		})
+
+		if (e.keyCode == Event.KEY_UP && index > 0) index--                                        // up
+		if (e.keyCode == Event.KEY_DOWN && index < $items.length - 1) index++                        // down
+		if (!~index) index = 0
+
+		$items[index].focus()
+	}
 
 });
 
 function clearMenus() {
-$$(toggle).each(function(i) {
-getParent(i).removeClassName('open')
-})
+	$$(toggle).each(function(i) {
+	getParent(i).removeClassName('open')
+	})
 }
 
 function getParent($this) {
-var selector = $this.readAttribute('data-target')
-, $parent
+	var selector = $this.readAttribute('data-target')
+	, $parent
 
-if (!selector) {
-  selector = $this.readAttribute('href')
-  selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#' //strip for ie7
+	if (!selector) {
+		selector = $this.readAttribute('href')
+		selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#' //strip for ie7
+	}
+
+	$parent = selector && $$(selector)
+
+	if (!$parent || !$parent.length) $parent = $this.up()
+
+	return $parent
 }
 
-$parent = selector && $$(selector)
-
-if (!$parent || !$parent.length) $parent = $this.up()
-
-return $parent
-}
-	BootStrap.Modal = Class.create({
+BootStrap.Modal = Class.create({
 	initialize : function (element, options) {
+		element.store('bootstrap:modal',this)
 		this.$element = $(element);
 		this.options = options
 		this.options.backdrop = this.options.backdrop != undefined ? options.backdrop : true
 		this.options.keyboard = this.options.keyboard != undefined ? options.keyboard : true
 		this.options.show = this.options.show != undefined ? options.show : true
-		
-		
+
+
 		if(this.options.show)
 			this.show();
 		$$("[data-dismiss='modal']").invoke("observe","click",function(){
 			this.hide()
 		}.bind(this))
-		
-		if(this.options.remote && this.$element.select('.modal-body'))
-		{
+
+		if(this.options.remote && this.$element.select('.modal-body')) {
 			var t = new Ajax.Updater(this.$element.select('.modal-body')[0],this.options.remote);
 		}
 	},
@@ -271,78 +272,64 @@ return $parent
 	}
 	, show: function (e) {
 		var that = this
-		
+
 		this.$element.setStyle({display:'block'})
-		
+
 		if (this.isShown ) return
-		
+
 		this.isShown = true
-		
+
 		this.escape()
-		
+
 		this.backdrop(function () {
 			var transition = (BootStrap.handleeffects == 'css' || (BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined')) && that.$element.hasClassName('fade')
-			
+
 			if (!that.$element.up().length) {
 				$$("body")[0].insert(that.$element);
 			}
 			that.$element.setStyle({display:'block'})
-			
-			if(transition && BootStrap.handleeffects == 'css')
-			{
+
+			if(transition && BootStrap.handleeffects == 'css') {
 				that.$element.observe(BootStrap.transitionendevent,function(){
 					that.$element.fire("bootstrap:shown");
 				});
 				setTimeout(function(){
 					that.$element.addClassName('in').writeAttribute('aria-hidden',false);
 				},1);
-			}
-			else if(transition && BootStrap.handleeffects == 'effect')
-			{
+			} else if(transition && BootStrap.handleeffects == 'effect') {
 				new Effect.Parallel([
 					new Effect.Morph(that.$element,{sync:true,style:'top:10%'}),
 					new Effect.Opacity(that.$element,{sync:true,from:0,to:1})
-					],{duration:0.3,afterFinish:function(){
-						that.$element.addClassName('in').writeAttribute('aria-hidden', false)
-						that.$element.fire("bootstrap:shown");
-					}})
-			}
-			else
-			{
+				],{duration:0.3,afterFinish:function(){
+					that.$element.addClassName('in').writeAttribute('aria-hidden', false)
+					that.$element.fire("bootstrap:shown");
+				}})
+			} else {
 				that.$element.addClassName('in').writeAttribute('aria-hidden', false).fire("bootstrap:shown");
 			}
-			
+
 			that.enforceFocus()
 		})
 	}
-	
 	, hide: function (e) {
-	
+
 		var that = this
-		
-		
+
 		if (!this.isShown ) return
-		
+
 		this.isShown = false
-		
+
 		this.escape()
-		
-		if(BootStrap.handleeffects == 'css' && this.$element.hasClassName('fade'))
-		{
+
+		if(BootStrap.handleeffects == 'css' && this.$element.hasClassName('fade')) {
 			this.hideWithTransition()
-		}
-		else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined' && this.$element.hasClassName('fade'))
-		{
+		} else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined' && this.$element.hasClassName('fade')) {
 			this.hideWithTransition()
-		}
-		else
-		{
+		} else {
 			this.hideModal()
 			this.$element.setStyle({display:''});
 		}
-	
 	}
-	
 	, enforceFocus: function () {
 		var that = this
 		$(document).on('focus', function (e) {
@@ -351,23 +338,22 @@ return $parent
 			}
 		})
 	}
-	
+
 	, escape: function () {
 		var that = this
 		if (this.isShown && this.options.keyboard) {
-			$(document).on('keyup', function ( e ) {
+			$(document).on('keyup', function (e) {
 				e.which == Event.KEY_ESC && that.hide()
 			})
 		} else if (!this.isShown) {
 			$(document).stopObserving('keyup')
 		}
 	}
-	
+
 	, hideWithTransition: function () {
 		var that = this
-		
-		if(BootStrap.handleeffects == 'css')
-		{
+
+		if(BootStrap.handleeffects == 'css') {
 			this.$element.observe(BootStrap.transitionendevent,function(){
 				this.setStyle({display:''});
 				this.setStyle({top:''})
@@ -377,9 +363,7 @@ return $parent
 			setTimeout(function(){
 				this.$element.removeClassName('in').writeAttribute('aria-hidden',true)
 			}.bind(this))
-		}
-		else
-		{
+		} else {
 			new Effect.Morph(this.$element,{duration:0.30,style:'top:-25%;',afterFinish:function(effect){
 				effect.element.removeClassName('in').writeAttribute('aria-hidden', true)
 				effect.element.setStyle({display:''});
@@ -388,7 +372,7 @@ return $parent
 			}})
 		}
 	}
-	
+
 	, hideModal: function () {
 		this.$element.hide()
 		this.backdrop(function(){
@@ -401,79 +385,67 @@ return $parent
 		this.$backdrop.remove()
 		this.$backdrop = null
 	}
-	
+
 	, backdrop: function (callback) {
 
 		var that = this
 		, animate = this.$element.hasClassName('fade') ? 'fade' : ''
-		
+
 		if (this.isShown && this.options.backdrop) {
 			var doAnimate = (BootStrap.handleeffects == 'css' || (BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined')) && animate
-			
+
 			this.$backdrop = new Element("div",{"class":"modal-backdrop "+animate})
-			if(doAnimate && BootStrap.handleeffects == 'css')
-			{
+			if(doAnimate && BootStrap.handleeffects == 'css') {
 				this.$backdrop.observe(BootStrap.transitionendevent,function(){
 					callback()
 					this.stopObserving(BootStrap.transitionendevent)
 				})
-			}
-			else if(doAnimate && BootStrap.handleeffects == 'effect')
-			{
+			} else if(doAnimate && BootStrap.handleeffects == 'effect') {
 				this.$backdrop.setOpacity(0)
 			}
-			
+
 			this.$backdrop.observe("click",function(){
-			that.options.backdrop == 'static' ? '' : that.hide()
+				that.options.backdrop == 'static' ? '' : that.hide()
 			})
-			
+
 			$$("body")[0].insert(this.$backdrop)
-			
-			if(doAnimate && BootStrap.handleeffects == 'effect')
-			{
+
+			if(doAnimate && BootStrap.handleeffects == 'effect') {
 				new Effect.Appear(this.$backdrop,{from:0,to:0.80,duration:0.3,afterFinish:callback})
-			}
-			else
-			{
+			} else {
 				callback();
 			}
 			setTimeout(function(){
 				that.$backdrop.addClassName('in');
 			},1);
 
-		
+
 		} else if (!this.isShown && this.$backdrop) {
-			
-			if(animate && BootStrap.handleeffects == 'css')
-			{
+			if(animate && BootStrap.handleeffects == 'css'){
 				that.$backdrop.observe(BootStrap.transitionendevent,function(){
 					callback()
 				});
 				setTimeout(function(){
 					that.$backdrop.removeClassName('in')
 				},1);
-			}
-			else if(animate && BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined')
-			{
+			} else if(animate && BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined') {
 				new Effect.Fade(that.$backdrop,{duration:0.3,from:that.$backdrop.getOpacity()*1,afterFinish:function(){
 					that.$backdrop.removeClassName('in')
 					callback()
 				}})
-			}
-			else
-			{
+			} else {
 				that.$backdrop.removeClassName('in')
 				callback()
 			}
-		
+
 		} else if (callback) {
 			callback()
 		}
 	}
 });
 BootStrap.Tooltip = Class.create({
-
 	initialize : function (element, options) {
+		element.store('bootstrap:tooltip',this)
 	
 		this.options = {
 			animation: true
@@ -493,8 +465,7 @@ BootStrap.Tooltip = Class.create({
 				, hide: options.delay
 			}
 		}
-		if(this.options.subclass == undefined)
-		{
+		if(this.options.subclass == undefined) {
 			this.init('tooltip', element)
 		}
 	}
@@ -526,9 +497,7 @@ BootStrap.Tooltip = Class.create({
 		if(this.options.selector){
 			this._options = Object.extend({},this.options)
 			Object.extend(this._options,{ trigger: 'manual', selector: '' })
-		}
-		else
-		{
+		} else {
 			this.fixTitle()
 		}
 	}
@@ -692,7 +661,7 @@ BootStrap.Tooltip = Class.create({
 				that.$element.fire('bootrap:hidden')
 			})
 			$tip.removeClassName('in')
-		}else if(BootStrap.handleeffects == 'effect' && this.$tip.hasClassName('fade')){
+		} else if(BootStrap.handleeffects == 'effect' && this.$tip.hasClassName('fade')) {
 			new Effect.Fade($tip,{duration:0.3,from:$tip.getOpacity()*1,afterFinish:function(){
 				$tip.removeClassName('in')
 				$tip.remove()
@@ -770,10 +739,10 @@ BootStrap.Tooltip = Class.create({
 	, destroy: function () {
 		this.hide().$element.stopObserving()
 	}
-
 });
 BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 	initialize : function ($super,element, options) {
+		element.store('bootstrap:popover',this)
 		$super(element,{subclass:true});
 		Object.extend(this.options,{
 			placement: 'right'
@@ -821,10 +790,10 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 		this.hide()
 		this.$element.stopObserving(this.options.trigger)
 	}
-
 });
 BootStrap.Tab = Class.create({
 	initialize : function (element) {
+		element.store('bootstrap:tab',this)
 		this.element = $(element)
 	}
 	, show: function () {
@@ -874,8 +843,8 @@ BootStrap.Tab = Class.create({
 				element.addClassName('in')
 			} else if (transitionEffect) {
 				new Effect.Appear(element,{duration:0.3,afterFinish:function(){
-				element.addClassName('in')
-			}})
+					element.addClassName('in')
+				}})
 			} else {
 				element.removeClassName('fade')
 			}
@@ -895,10 +864,10 @@ BootStrap.Tab = Class.create({
 			$active.removeClassName('in')
 		} else if (transitionEffect){
 			if($active.hasClassName('in') && $active.hasClassName('fade')){
-			new Effect.Fade($active,{duration:0.3,afterFinish:function(){
-				$active.removeClassName('in')
-				next()
-			}})
+				new Effect.Fade($active,{duration:0.3,afterFinish:function(){
+					$active.removeClassName('in')
+					next()
+				}})
 			}
 			else{
 				next()
@@ -910,9 +879,12 @@ BootStrap.Tab = Class.create({
 		
 	}
 });
+
 BootStrap.Collapse = Class.create({
 	initialize : function (element, options) {
 		this.$element = $(element)
+		
+		element.store('bootstrap:collapse',this)
 		
 		this.options = {
 			toggle: true
@@ -971,10 +943,12 @@ BootStrap.Collapse = Class.create({
 			this.$element.setStyle(newstyle)
 		} else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.BlindDown !== 'undefined'){
 			this.$element.blindDown({duration:0.5,afterFinish:function(effect){
+//				effect.element[method]('in')
 				newstyle = {}
 				newstyle[dimension] = this.$element[scroll]+'px'
 				this.$element.setStyle(newstyle)
 			}.bind(this)})
+		/* 		   this.$element[dimension](this.$element[scroll] */
 		}
 	}
 	
@@ -1069,11 +1043,11 @@ document.observe("dom:loaded",function(){
 	})
 
 	//BootStrap.Button
-	  $$("[data-toggle^=button]").invoke("observe","click",function(e){
-	    var $btn = e.findElement()
-	    if(!$btn.hasClassName('btn')) $btn = $btn.up('.btn')
-	    new BootStrap.Button($btn,'toggle')
-	  });
+	$$("[data-toggle^=button]").invoke("observe","click",function(e){
+		var $btn = e.findElement()
+		if(!$btn.hasClassName('btn')) $btn = $btn.up('.btn')
+		new BootStrap.Button($btn,'toggle')
+	});
 
 	//Bootstrap.Dropdown
 	document.observe('click',clearMenus)
@@ -1085,25 +1059,16 @@ document.observe("dom:loaded",function(){
 	
 	//Bootstrap.Modal
 	$$("[data-toggle='modal']").invoke("observe","click",function(e){
-	
 		var target = this.readAttribute("data-target") || (this.href && this.href.replace(/.*(?=#[^\s]+$)/,'').replace(/#/,''));
 		var options = {};
-		if($(target) != undefined)
-		{
+		if($(target) != undefined) {
 			target = $(target);
-			if(!/#/.test(this.href))
-			{
+			if(!/#/.test(this.href)) {
 				options.remote = this.href;
 			}
 			new BootStrap.Modal($(target),options);
 		}
-		
 		e.stop();
-	});
-	
-	//Bootstrap.Tooltip
-	$$('.tooltip').each(function(el){
-		new BootStrap.Tooltip(el);
 	});
 	
 	//Bootstrap.Tab
@@ -1127,7 +1092,7 @@ document.observe("dom:loaded",function(){
 		} else {
 			e.removeClassName('collapsed')
 		}
-		target.store('bootstrap:collapse',new BootStrap.Collapse(target,options))
+		new BootStrap.Collapse(target,options)
 	});
 
 	document.on('click','[data-toggle="collapse"]',function(e){
@@ -1135,5 +1100,5 @@ document.observe("dom:loaded",function(){
 		href = href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')
 		var target = e.findElement().readAttribute('data-target') || e.preventDefault() || href
 		$(target).retrieve('bootstrap:collapse').toggle();
-	});	
+	});
 });
