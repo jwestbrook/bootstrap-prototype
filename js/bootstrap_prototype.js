@@ -910,6 +910,154 @@ BootStrap.Tab = Class.create({
 		
 	}
 });
+BootStrap.Collapse = Class.create({
+	initialize : function (element, options) {
+		this.$element = $(element)
+		
+		this.options = {
+			toggle: true
+		}
+		
+		Object.extend(this.options,options)
+		
+		
+		if (this.options.parent) {
+			this.$parent = $(this.options.parent)
+		}
+		
+		var dimension = this.dimension()
+		if(this.$element.style[dimension] === 'auto')
+		{
+			var scroll = ['scroll', dimension].join('-').camelize()
+			this.reset(this.$element[scroll]+'px')
+		}
+		
+		this.options.toggle && this.toggle()
+	}
+	
+	, dimension: function () {
+		var hasWidth = this.$element.hasClassName('width')
+		return hasWidth ? 'width' : 'height'
+	}
+	
+	, show: function () {
+		var dimension
+		, scroll
+		, actives
+		, hasData
+		
+		if (this.transitioning) return
+		
+		dimension = this.dimension()
+		scroll = ['scroll', dimension].join('-').camelize()
+		actives = this.$parent && this.$parent.select('> .accordion-group > .in')
+		
+		if (actives && actives.length) {
+			actives.each(function(el){
+				var bootstrapobject = el.retrieve('bootstrap:collapse')
+				if (bootstrapobject && bootstrapobject.transitioning) return
+				bootstrapobject.hide()
+			});
+		}
+		
+		var newstyle = {}
+		newstyle[dimension] = '0px'
+		this.$element.setStyle(newstyle)
+		this.transition('addClassName', 'show', 'bootstrap:shown')
+		
+		if(BootStrap.handleeffects == 'css'){
+			newstyle = {}
+			newstyle[dimension] = this.$element[scroll]+'px'
+			this.$element.setStyle(newstyle)
+		} else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.BlindDown !== 'undefined'){
+			this.$element.blindDown({duration:0.5,afterFinish:function(effect){
+				newstyle = {}
+				newstyle[dimension] = this.$element[scroll]+'px'
+				this.$element.setStyle(newstyle)
+			}.bind(this)})
+		}
+	}
+	
+	, hide: function () {
+		var dimension
+		if (this.transitioning) return
+		dimension = this.dimension()
+		this.reset(this.$element.getStyle(dimension))
+		this.transition('removeClassName', 'hide', 'bootstrap:hidden')
+		if(Effect.Queues.get('global').effects.length == 0)
+		{
+			var newstyle = {}
+			newstyle[dimension] = '0px'
+			this.$element.setStyle(newstyle)
+		}
+	}
+	
+	, reset: function (size) {
+		var dimension = this.dimension()
+		
+		this.$element
+			.removeClassName('collapse')
+		
+		var newstyle = {}
+		newstyle[dimension] = size
+		this.$element.setStyle(newstyle)
+		
+		this.$element[size !== null ? 'addClassName' : 'removeClassName']('collapse')
+		
+		return this
+	}
+	
+	, transition: function (method, startEvent, completeEvent) {
+		var that = this
+		, complete = function () {
+			if (startEvent == 'show') this.reset()
+			this.transitioning = 0
+			this.$element.fire(completeEvent)
+		}.bind(this)
+		
+		this.$element.fire('bootstrap:'+startEvent)
+		
+		this.transitioning = 1
+		
+		if(BootStrap.handleeffects == 'css' && this.$element.hasClassName('collapse')){
+			this.$element.observe(BootStrap.transitionendevent, complete)
+			this.$element[method]('in')
+		} else if(startEvent == 'hide' && BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.BlindUp !== 'undefined') {
+			this.$element.blindUp({duration:0.5,afterFinish:function(effect){
+				var dimension = this.dimension()
+				effect.element[method]('in')
+				var newstyle = {}
+				newstyle[dimension] = '0px'
+				this.$element.setStyle(newstyle)
+				complete()
+			}.bind(this)})
+		} else if(startEvent == 'show' && BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.BlindUp !== 'undefined') {
+			this.$element.blindDown({duration:0.5,beforeStart:function(effect){
+				var dimension = this.dimension()
+				effect.element[method]('in')
+				var newstyle = {}
+				newstyle[dimension] = 'auto'
+				this.$element.setStyle(newstyle)
+				effect.element.hide()
+			}.bind(this),afterFinish:function(effect){
+				complete()
+			}.bind(this)})
+		}
+		else {
+			complete()
+			this.$element[method]('in')
+		}
+		
+		
+		
+	}
+	
+	, toggle: function () {
+		this[this.$element.hasClassName('in') ? 'hide' : 'show']()
+	}
+	
+});
+
 
 //run all dom:loaded at end
 
@@ -964,5 +1112,28 @@ document.observe("dom:loaded",function(){
 		new BootStrap.Tab(this).show()
 	});
 	
-	
+	//BootStrap.Collapse
+	$$('[data-toggle="collapse"]').each(function(e){
+		var href = e.readAttribute('href');
+		href = href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')
+		var target = e.readAttribute('data-target') || href
+		, options = {toggle : false}
+		if(e.hasAttribute('data-parent')){
+			options.parent = e.readAttribute('data-parent').replace('#','')
+		}
+		target = $(target)
+		if(target.hasClassName('in')){
+			e.addClassName('collapsed')
+		} else {
+			e.removeClassName('collapsed')
+		}
+		target.store('bootstrap:collapse',new BootStrap.Collapse(target,options))
+	});
+
+	document.on('click','[data-toggle="collapse"]',function(e){
+		var href = e.findElement().readAttribute('href');
+		href = href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')
+		var target = e.findElement().readAttribute('data-target') || e.preventDefault() || href
+		$(target).retrieve('bootstrap:collapse').toggle();
+	});	
 });
