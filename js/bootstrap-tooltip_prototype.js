@@ -39,7 +39,6 @@ if(BootStrap === undefined)
   * =============================== */
 
 BootStrap.Tooltip = Class.create({
-
 	initialize : function (element, options) {
 		element.store('bootstrap:tooltip',this)
 	
@@ -61,8 +60,7 @@ BootStrap.Tooltip = Class.create({
 				, hide: options.delay
 			}
 		}
-		if(this.options.subclass == undefined)
-		{
+		if(this.options.subclass == undefined) {
 			this.init('tooltip', element)
 		}
 	}
@@ -94,9 +92,7 @@ BootStrap.Tooltip = Class.create({
 		if(this.options.selector){
 			this._options = Object.extend({},this.options)
 			Object.extend(this._options,{ trigger: 'manual', selector: '' })
-		}
-		else
-		{
+		} else {
 			this.fixTitle()
 		}
 	}
@@ -260,7 +256,7 @@ BootStrap.Tooltip = Class.create({
 				that.$element.fire('bootrap:hidden')
 			})
 			$tip.removeClassName('in')
-		}else if(BootStrap.handleeffects == 'effect' && this.$tip.hasClassName('fade')){
+		} else if(BootStrap.handleeffects == 'effect' && this.$tip.hasClassName('fade')) {
 			new Effect.Fade($tip,{duration:0.3,from:$tip.getOpacity()*1,afterFinish:function(){
 				$tip.removeClassName('in')
 				$tip.remove()
@@ -338,15 +334,4 @@ BootStrap.Tooltip = Class.create({
 	, destroy: function () {
 		this.hide().$element.stopObserving()
 	}
-
-});
-
-
- /* TOOLTIP PLUGIN DEFINITION
-  * ========================= */
-
-document.observe('dom:loaded',function(){
-	$$('.tooltip').each(function(el){
-		new BootStrap.Tooltip(el);
-	});
 });

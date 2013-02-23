@@ -90,8 +90,8 @@ BootStrap.Tab = Class.create({
 				element.addClassName('in')
 			} else if (transitionEffect) {
 				new Effect.Appear(element,{duration:0.3,afterFinish:function(){
-				element.addClassName('in')
-			}})
+					element.addClassName('in')
+				}})
 			} else {
 				element.removeClassName('fade')
 			}
@@ -111,10 +111,10 @@ BootStrap.Tab = Class.create({
 			$active.removeClassName('in')
 		} else if (transitionEffect){
 			if($active.hasClassName('in') && $active.hasClassName('fade')){
-			new Effect.Fade($active,{duration:0.3,afterFinish:function(){
-				$active.removeClassName('in')
-				next()
-			}})
+				new Effect.Fade($active,{duration:0.3,afterFinish:function(){
+					$active.removeClassName('in')
+					next()
+				}})
 			}
 			else{
 				next()

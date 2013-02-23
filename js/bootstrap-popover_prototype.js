@@ -87,5 +87,4 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 		this.hide()
 		this.$element.stopObserving(this.options.trigger)
 	}
-
 });
