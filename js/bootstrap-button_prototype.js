@@ -38,6 +38,7 @@ if(BootStrap === undefined)
   * ============================== */
   BootStrap.Button = Class.create({
     initialize : function (element, options) {
+      element.store('bootstrap:button',this)
       this.$element = $(element)
       if(typeof options == 'object')
       {

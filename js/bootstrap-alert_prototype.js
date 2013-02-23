@@ -39,6 +39,7 @@ if(BootStrap === undefined)
   * ====================== */
 	BootStrap.Alert = Class.create({
 		initialize : function (element) {
+			element.store('bootstrap:alert',this)
 			$(element).observe('click',this.close)
 		},
 		close : function (e) {

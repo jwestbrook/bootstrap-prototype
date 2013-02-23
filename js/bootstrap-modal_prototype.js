@@ -36,6 +36,7 @@ if(BootStrap === undefined)
 
 	BootStrap.Modal = Class.create({
 	initialize : function (element, options) {
+		element.store('bootstrap:modal',this)
 		this.$element = $(element);
 		this.options = options
 		this.options.backdrop = this.options.backdrop != undefined ? options.backdrop : true

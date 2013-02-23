@@ -41,6 +41,7 @@ if(BootStrap === undefined)
 BootStrap.Tooltip = Class.create({
 
 	initialize : function (element, options) {
+		element.store('bootstrap:tooltip',this)
 	
 		this.options = {
 			animation: true

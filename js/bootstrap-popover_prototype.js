@@ -39,6 +39,7 @@ if(BootStrap === undefined)
 	 ========================================== */
 BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 	initialize : function ($super,element, options) {
+		element.store('bootstrap:popover',this)
 		$super(element,{subclass:true});
 		Object.extend(this.options,{
 			placement: 'right'

@@ -40,6 +40,7 @@ if(BootStrap === undefined)
   var toggle = '[data-toggle=dropdown]';
   BootStrap.Dropdown = Class.create({
     initialize : function (element) {
+      element.store('bootstrap:dropdown',this)
       var $el = $(element).on('click',this.toggle)
       $$('html')[0].on('click', function () {
       $el.up().removeClassName('open')

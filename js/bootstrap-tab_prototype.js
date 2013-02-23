@@ -40,6 +40,7 @@ if(BootStrap === undefined)
 
 BootStrap.Tab = Class.create({
 	initialize : function (element) {
+		element.store('bootstrap:tab',this)
 		this.element = $(element)
 	}
 	, show: function () {
