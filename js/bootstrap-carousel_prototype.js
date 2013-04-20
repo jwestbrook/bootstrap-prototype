@@ -122,6 +122,11 @@ BootStrap.Carousel = Class.create({
 		$next = $next != undefined ? $next : this.$element.select('.item')[fallback]()
 
 		type = (type == 'previous' ? 'prev' : type)
+/*
+		e = $.Event('slide', {
+			relatedTarget: $next[0]
+		})
+*/
 		
 		if ($next.hasClassName('active')) return
 		
@@ -153,6 +158,28 @@ BootStrap.Carousel = Class.create({
 			$next.offsetWidth // force reflow
 			$active.addClassName(direction)
 			$next.addClassName(direction)
+		} else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Morph !== 'undefined'){
+			
+			new Effect.Parallel([
+				new Effect.Morph($next,{'sync':true,'style':'left:0%;'}),
+				new Effect.Morph($active,{'sync':true,'style':'left:'+( direction == 'left' ? '-' : '' )+'100%;'})
+			],{
+				'duration':0.6,
+				'beforeSetup':function(effect){
+					$next.addClassName(type)
+					this.sliding = true
+				}.bind(this),
+				'afterFinish':function(effect){
+					$next.removeClassName(type).addClassName('active')
+					$active.removeClassName('active')
+					$next.style[direction] = null;
+					$active.style[direction] = null;
+					this.sliding = false
+					this.$element.fire('bootstrap:slid')
+					isCycling && this.cycle()
+				}.bind(this)
+			})
+			
 		} else {
 			this.$element.fire('bootstrap:slide')
 			$active.removeClassName('active')
@@ -177,10 +204,10 @@ document.observe('dom:loaded',function(){
 		
 		$target.retrieve('bootstrap:carousel')[to]()
 
-	    if ($this.hasAttribute('data-slide-to')) {
-		    slideIndex = $this.readAttribute('data-slide-to')
-		    $target.retrieve('bootstrap:carousel').pause().to(slideIndex).cycle()
-	    }
+		if ($this.hasAttribute('data-slide-to')) {
+			slideIndex = $this.readAttribute('data-slide-to')
+			$target.retrieve('bootstrap:carousel').pause().to(slideIndex).cycle()
+		}
 		
 		e.stop()
 	});
