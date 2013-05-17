@@ -60,6 +60,13 @@ BootStrap.Dropdown = Class.create({
 		clearMenus()
 
 		if (!isActive) {
+			if ('ontouchstart' in document.documentElement) {
+				// if mobile we we use a backdrop because click events don't delegate
+				var backdrop = new Element('div',{'class':'dropdown-backdrop'});
+				backdrop.observe('click',clearMenus);
+				$this.insert({'before':backdrop})
+			}
+
 			$parent.toggleClassName('open')
 		}
 
@@ -116,6 +123,7 @@ BootStrap.Dropdown = Class.create({
 });
 
 function clearMenus() {
+	$$('.dropdown-backdrop').invoke('remove')
 	$$(toggle).each(function(i) {
 	getParent(i).removeClassName('open')
 	})
