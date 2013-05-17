@@ -1,5 +1,5 @@
 /* ===========================================================
- * bootstrap_prototype.js v2.3.1
+ * bootstrap_prototype.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html
   * ===========================================================
  * Copyright 2012 Twitter, Inc.
