@@ -25,7 +25,7 @@ Differences according to PrototypeJS standards
 	<tr><td>BootStrap.Tab</td><td>2.3.1</td></tr>
 	<tr><td>BootStrap.Tooltip</td><td>2.3.1</td></tr>
 	<tr><td>BootStrap.Transition</td><td>2.3.1</td></tr>
-	<tr><td>BootStrap.Typeahead</td><td>not available</td></tr>
+	<tr><td>BootStrap.Typeahead</td><td>2.3.1</td></tr>
 </table>
 
 
