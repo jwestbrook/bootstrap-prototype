@@ -366,12 +366,12 @@ BootStrap.Collapse = Class.create({
 			this.$element.setStyle(newstyle)
 		} else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.BlindDown !== 'undefined'){
 			this.$element.blindDown({duration:0.5,afterFinish:function(effect){
-				//effect.element[method]('in')
+//				effect.element[method]('in')
 				newstyle = {}
 				newstyle[dimension] = this.$element[scroll]+'px'
 				this.$element.setStyle(newstyle)
 			}.bind(this)})
-			/* 		   this.$element[dimension](this.$element[scroll] */
+		/* 		   this.$element[dimension](this.$element[scroll] */
 		}
 	}
 	
@@ -381,7 +381,8 @@ BootStrap.Collapse = Class.create({
 		dimension = this.dimension()
 		this.reset(this.$element.getStyle(dimension))
 		this.transition('removeClassName', 'hide', 'bootstrap:hidden')
-		if(Effect.Queues.get('global').effects.length == 0)
+		this.reset('0px')
+		if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && Effect.Queues.get('global').effects.length == 0)
 		{
 			var newstyle = {}
 			newstyle[dimension] = '0px'

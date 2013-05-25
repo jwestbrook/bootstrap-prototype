@@ -114,7 +114,8 @@ BootStrap.Collapse = Class.create({
 		dimension = this.dimension()
 		this.reset(this.$element.getStyle(dimension))
 		this.transition('removeClassName', 'hide', 'bootstrap:hidden')
-		if(Effect.Queues.get('global').effects.length == 0)
+		this.reset('0px')
+		if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && Effect.Queues.get('global').effects.length == 0)
 		{
 			var newstyle = {}
 			newstyle[dimension] = '0px'
