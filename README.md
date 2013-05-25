@@ -18,7 +18,7 @@ Differences according to PrototypeJS standards
 	<tr><td>BootStrap.Button</td><td>2.3.2</td></tr>
 	<tr><td>BootStrap.Carousel</td><td>2.3.2</td></tr>
 	<tr><td>BootStrap.Collapse</td><td>2.3.2</td></tr>
-	<tr><td>BootStrap.Dropdown</td><td>2.3.1</td></tr>
+	<tr><td>BootStrap.Dropdown</td><td>2.3.2</td></tr>
 	<tr><td>BootStrap.Modal</td><td>2.3.2</td></tr>
 	<tr><td>BootStrap.Popover</td><td>2.3.2</td></tr>
 	<tr><td>BootStrap.Scrollspy</td><td>not available</td></tr>
