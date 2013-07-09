@@ -78,6 +78,10 @@ BootStrap.Alert = Class.create({
 				removeElement()
 			}})
 		}
+		else
+		{
+			removeElement()
+		}
 
 	}
 });

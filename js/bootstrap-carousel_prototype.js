@@ -43,7 +43,8 @@ BootStrap.Carousel = Class.create({
 			interval: 5000
 			, pause: 'hover'
 			}
-		this.$element = element
+		this.$element = $(element)
+		this.options.interval = this.$element.hasAttribute('data-interval') ? this.$element.readAttribute('data-interval') : this.options.interval
 		element.store('bootstrap:carousel',this)
 		this.$indicators = this.$element.down('.carousel-indicators')
 		Object.extend(this.options,options)
