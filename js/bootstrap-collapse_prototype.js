@@ -214,7 +214,7 @@ document.observe('dom:loaded',function(){
 
 	document.on('click','[data-toggle="collapse"]',function(e){
 		var href = e.findElement().readAttribute('href');
-		href = href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')
+		href = e.findElement().hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '').replace('#','') : ''
 		var target = e.findElement().readAttribute('data-target') || e.preventDefault() || href
 		$(target).retrieve('bootstrap:collapse').toggle();
 	});

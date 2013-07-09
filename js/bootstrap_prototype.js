@@ -1493,7 +1493,7 @@ document.observe("dom:loaded",function(){
 	//BootStrap.Collapse
 	$$('[data-toggle="collapse"]').each(function(e){
 		var href = e.readAttribute('href');
-		href = href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')
+		href = e.hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '').replace('#','') : ''
 		var target = e.readAttribute('data-target') || href
 		, options = {toggle : false}
 		if(e.hasAttribute('data-parent')){
@@ -1510,7 +1510,7 @@ document.observe("dom:loaded",function(){
 
 	document.on('click','[data-toggle="collapse"]',function(e){
 		var href = e.findElement().readAttribute('href');
-		href = href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')
+		href = e.findElement().hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '').replace('#','') : ''
 		var target = e.findElement().readAttribute('data-target') || e.preventDefault() || href
 		$(target).retrieve('bootstrap:collapse').toggle();
 	});
