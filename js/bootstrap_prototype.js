@@ -98,6 +98,10 @@ BootStrap.Alert = Class.create({
 				removeElement()
 			}})
 		}
+		else
+		{
+			removeElement()
+		}
 
 	}
 });
@@ -109,7 +113,7 @@ BootStrap.Button = Class.create({
 		if(typeof options == 'object')
 		{
 			this.options = options
-			this.options.loadingText = typeof this.options.loadingText != 'undefined' ? options.loadingText : ''
+			this.options.loadingText = (typeof this.options.loadingText != 'undefined') ? options.loadingText : ''
 		} else if(typeof options != 'undefined' && options == 'toggle') {
 			this.toggle()
 		} else if (typeof options != 'undefined'){
@@ -120,13 +124,12 @@ BootStrap.Button = Class.create({
 	setState : function (state) {
 		var d = 'disabled'
 		, $el = this.$element
-		, data = $el.gethtml5data()
 		, val = $el.readAttribute('type') == 'input' ? 'value' : 'innerHTML'
 
 		state = state + 'Text'
-		data.resetText || $el.sethtml5data('resetText',$el[val])
+		$el.readAttribute('data-reset-text') || $el.writeAttribute('data-reset-text',$el[val])
 
-		$el[val] = (data[state] || this.options[state])
+		$el[val] = ($el.readAttribute('data-'+state.underscore().dasherize()) || (this.options && this.options[state]) || '')
 
 		// push to event loop to allow forms to submit
 		setTimeout(function () {
@@ -153,7 +156,8 @@ BootStrap.Carousel = Class.create({
 			interval: 5000
 			, pause: 'hover'
 			}
-		this.$element = element
+		this.$element = $(element)
+		this.options.interval = this.$element.hasAttribute('data-interval') ? this.$element.readAttribute('data-interval') : this.options.interval
 		element.store('bootstrap:carousel',this)
 		this.$indicators = this.$element.down('.carousel-indicators')
 		Object.extend(this.options,options)
@@ -1548,6 +1552,5 @@ document.observe("dom:loaded",function(){
 	$$('[data-provide="typeahead"]').each(function(i){
 		new BootStrap.Typeahead(i)
 	});
-
 	
 });
