@@ -197,7 +197,7 @@ BootStrap.Collapse = Class.create({
 document.observe('dom:loaded',function(){
 	$$('[data-toggle="collapse"]').each(function(e){
 		var href = e.readAttribute('href');
-		href = href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')
+		href = e.hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '').replace('#','') : ''
 		var target = e.readAttribute('data-target') || href
 		, options = {toggle : false}
 		if(e.hasAttribute('data-parent')){
