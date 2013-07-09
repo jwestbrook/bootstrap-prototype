@@ -114,7 +114,8 @@ BootStrap.Collapse = Class.create({
 		dimension = this.dimension()
 		this.reset(this.$element.getStyle(dimension))
 		this.transition('removeClassName', 'hide', 'bootstrap:hidden')
-		if(Effect.Queues.get('global').effects.length == 0)
+		this.reset('0px')
+		if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && Effect.Queues.get('global').effects.length == 0)
 		{
 			var newstyle = {}
 			newstyle[dimension] = '0px'
@@ -197,13 +198,13 @@ BootStrap.Collapse = Class.create({
 document.observe('dom:loaded',function(){
 	$$('[data-toggle="collapse"]').each(function(e){
 		var href = e.readAttribute('href');
-		href = e.hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '').replace('#','') : ''
+		href = e.hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '') : null
 		var target = e.readAttribute('data-target') || href
 		, options = {toggle : false}
 		if(e.hasAttribute('data-parent')){
 			options.parent = e.readAttribute('data-parent').replace('#','')
 		}
-		target = $(target)
+		target = $$(target).first()
 		if(target.hasClassName('in')){
 			e.addClassName('collapsed')
 		} else {
@@ -214,8 +215,8 @@ document.observe('dom:loaded',function(){
 
 	document.on('click','[data-toggle="collapse"]',function(e){
 		var href = e.findElement().readAttribute('href');
-		href = e.findElement().hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '').replace('#','') : ''
+		href = e.findElement().hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '') : null
 		var target = e.findElement().readAttribute('data-target') || e.preventDefault() || href
-		$(target).retrieve('bootstrap:collapse').toggle();
+		$$(target).first().retrieve('bootstrap:collapse').toggle();
 	});
 });
