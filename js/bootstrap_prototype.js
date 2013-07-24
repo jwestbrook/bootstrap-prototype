@@ -370,7 +370,8 @@ BootStrap.Collapse = Class.create({
 		
 		if(BootStrap.handleeffects == 'css'){
 			newstyle = {}
-			newstyle[dimension] = this.$element[scroll]+'px'
+//			newstyle[dimension] = this.$element[scroll]+'px'
+			newstyle[dimension] = 'auto'
 			this.$element.setStyle(newstyle)
 		} else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.BlindDown !== 'undefined'){
 			this.$element.blindDown({duration:0.5,afterFinish:function(effect){
@@ -1557,7 +1558,6 @@ document.observe("dom:loaded",function(){
 		}
 		e.stop();
 	});
-})	
 	//Bootstrap.Tab
 	$$('[data-toggle="tab"], [data-toggle="pill"]').invoke('observe','click',function(e){
 		e.preventDefault();
@@ -1568,5 +1568,4 @@ document.observe("dom:loaded",function(){
 	$$('[data-provide="typeahead"]').each(function(i){
 		new BootStrap.Typeahead(i)
 	});
-})	
 });
