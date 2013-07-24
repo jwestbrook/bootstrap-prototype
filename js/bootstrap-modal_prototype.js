@@ -38,7 +38,7 @@ BootStrap.Modal = Class.create({
 	initialize : function (element, options) {
 		element.store('bootstrap:modal',this)
 		this.$element = $(element);
-		this.options = options
+		this.options = options != undefined ? options : {}
 		this.options.backdrop = this.options.backdrop != undefined ? options.backdrop : true
 		this.options.keyboard = this.options.keyboard != undefined ? options.keyboard : true
 		this.options.show = this.options.show != undefined ? options.show : true
@@ -62,7 +62,9 @@ BootStrap.Modal = Class.create({
 
 		this.$element.setStyle({display:'block'})
 
-		if (this.isShown ) return
+		var showEvent = this.$element.fire('bootstrap:show')
+
+		if (this.isShown || showEvent.defaultPrevented) return
 
 		this.isShown = true
 
@@ -71,7 +73,7 @@ BootStrap.Modal = Class.create({
 		this.backdrop(function () {
 			var transition = (BootStrap.handleeffects == 'css' || (BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined')) && that.$element.hasClassName('fade')
 
-			if (!that.$element.up().length) {
+			if (that.$element.up('body') == undefined) {
 				$$("body")[0].insert(that.$element);
 			}
 			that.$element.setStyle({display:'block'})
@@ -102,7 +104,9 @@ BootStrap.Modal = Class.create({
 
 		var that = this
 
-		if (!this.isShown ) return
+		var hideEvent = this.$element.fire('bootstrap:hide')
+
+		if (!this.isShown || hideEvent.defaultPrevented) return
 
 		this.isShown = false
 
@@ -203,7 +207,7 @@ BootStrap.Modal = Class.create({
 				callback();
 			}
 			setTimeout(function(){
-				that.$backdrop.addClassName('in');
+				$$('modal-backdrop').invoke('addClassName','in')
 			},1);
 
 
