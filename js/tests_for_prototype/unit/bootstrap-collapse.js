@@ -37,53 +37,59 @@
         BootStrap.handleeffects = temp;
       })
 
-      test("should reset style to auto after finishing opening collapse", function () {
-        stop()
+      // test("should reset style to auto after finishing opening collapse", function () {
+      //   stop()
+      //   var temp = BootStrap.handleeffects;
+      //   BootStrap.handleeffects = null;
+      //   var t = new Element('div',{'class':'collapse','style':'height:0px;'});
+      //   var tb = new BootStrap.Collapse(t)
+      //   t.observe('bootstrap:show',function(){
+      //     ok(this.style.height == '0px')
+      //   });
+      //   t.observe('bootstrap:shown',function(){
+      //     ok(this.style.height == 'auto')
+      //     start()
+      //   })
+      //   tb.show();
+      //   BootStrap.handleeffects = temp;
+      // })
+
+      test("should add active class to target when collapse shown", function () {
+        stop();
         var temp = BootStrap.handleeffects;
         BootStrap.handleeffects = null;
-        var t = new Element('div',{'class':'collapse','style':'height:0px;'});
-        var tb = new BootStrap.Collapse(t)
-        t.observe('bootstrap:show',function(){
-          ok(this.style.height == '0px')
-        });
-        t.observe('bootstrap:shown',function(){
-          ok(this.style.height == 'auto')
+
+        var target = new Element('a',{'data-toggle':'collapse','href':'#test1'});
+        $('qunit-fixture').update(target);
+
+        var collapsible = new Element('div',{'id':'test1'});
+        collapsible.on('bootstrap:show',function(){
+          ok(!target.hasClassName('collapsed'))
           start()
         })
-        tb.show();
+        $('qunit-fixture').insert(collapsible)
+
+        document.fire('dom:loaded')
+        target.simulate('click')
         BootStrap.handleeffects = temp;
       })
 
-      // test("should add active class to target when collapse shown", function () {
-      //   $.support.transition = false
-      //   stop()
+      test("should remove active class to target when collapse hidden", function () {
+        stop();
+        var temp = BootStrap.handleeffects;
+        BootStrap.handleeffects = null;
 
-      //   var target = $('<a data-toggle="collapse" href="#test1"></a>')
-      //     .appendTo($('#qunit-fixture'))
+        var target = new Element('a',{'data-toggle':'collapse','href':'#test1'})
+        $('qunit-fixture').update(target)
 
-      //   var collapsible = $('<div id="test1"></div>')
-      //     .appendTo($('#qunit-fixture'))
-      //     .on('show', function () {
-      //       ok(!target.hasClass('collapsed'))
-      //       start()
-      //     })
+        var collapsible = new Element('div',{'id':'test1','class':'in'})
+        collapsible.on('bootstrap:hide',function(){
+          ok(target.hasClassName('collapsed'))
+          start()
+        })
+        $('qunit-fixture').insert(collapsible)
 
-      //   target.click()
-      // })
-
-      // test("should remove active class to target when collapse hidden", function () {
-      //   $.support.transition = false
-      //   stop()
-
-      //   var target = $('<a data-toggle="collapse" href="#test1"></a>')
-      //     .appendTo($('#qunit-fixture'))
-
-      //   var collapsible = $('<div id="test1" class="in"></div>')
-      //     .appendTo($('#qunit-fixture'))
-      //     .on('hide', function () {
-      //       ok(target.hasClass('collapsed'))
-      //       start()
-      //     })
-
-      //   target.click()
-      // })
+        document.fire('dom:loaded')
+        target.simulate('click')
+        BootStrap.handleeffects = temp;
+      })

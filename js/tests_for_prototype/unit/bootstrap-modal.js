@@ -1,137 +1,136 @@
-$(function () {
-
     module("bootstrap-modal")
 
-      test("should provide no conflict", function () {
-        var modal = $.fn.modal.noConflict()
-        ok(!$.fn.modal, 'modal was set back to undefined (org value)')
-        $.fn.modal = modal
-      })
-
-      test("should be defined on jquery object", function () {
-        var div = $("<div id='modal-test'></div>")
-        ok(div.modal, 'modal method is defined')
-      })
-
-      test("should return element", function () {
-        var div = $("<div id='modal-test'></div>")
-        ok(div.modal() == div, 'document.body returned')
-        $('#modal-test').remove()
-      })
-
-      test("should expose defaults var for settings", function () {
-        ok($.fn.modal.defaults, 'default object exposed')
+      test("should be defined on BootStrap Namespace", function () {
+        ok(BootStrap.Modal, 'modal class is defined')
       })
 
       test("should insert into dom when show method is called", function () {
         stop()
-        $.support.transition = false
-        $("<div id='modal-test'></div>")
-          .bind("shown", function () {
-            ok($('#modal-test').length, 'modal insterted into dom')
-            $(this).remove()
-            start()
-          })
-          .modal("show")
+        var temp = BootStrap.handleeffects;
+        BootStrap.handleeffects = null;
+        var t = new Element('div',{'id':'modal-test'})
+        t.observe('bootstrap:shown',function(){
+          ok($('modal-test') !== undefined, 'modal insterted into dom')
+          this.remove()
+          start()
+        })
+        var tb = new BootStrap.Modal(t)
+        BootStrap.handleeffects = temp;
       })
 
       test("should fire show event", function () {
         stop()
-        $.support.transition = false
-        $("<div id='modal-test'></div>")
-          .bind("show", function () {
-            ok(true, "show was called")
-          })
-          .bind("shown", function () {
-            $(this).remove()
-            start()
-          })
-          .modal("show")
+        var temp = BootStrap.handleeffects;
+        BootStrap.handleeffects = null;
+        var t = new Element('div',{'id':'modal-test'})
+        t.observe('bootstrap:show',function(){
+          ok(true,'show was called')
+        })
+        t.observe('bootstrap:shown',function(){
+          this.remove();
+          start()
+        })
+        var tb = new BootStrap.Modal(t)
+        BootStrap.handleeffects = temp;
       })
 
       test("should not fire shown when default prevented", function () {
         stop()
-        $.support.transition = false
-        $("<div id='modal-test'></div>")
-          .bind("show", function (e) {
-            e.preventDefault()
-            ok(true, "show was called")
-            start()
-          })
-          .bind("shown", function () {
-            ok(false, "shown was called")
-          })
-          .modal("show")
+        var temp = BootStrap.handleeffects;
+        BootStrap.handleeffects = null;
+        var t = new Element('div',{'id':'modal-test'})
+        t.observe('bootstrap:show',function(e){
+          e.preventDefault()
+          ok(true,"show was called")
+          start()
+        })
+        t.observe('bootstrap:shown',function(){
+          ok(false,"shown was called")
+        })
+        var tb = new BootStrap.Modal(t)
+        BootStrap.handleeffects = temp;
       })
 
       test("should hide modal when hide is called", function () {
         stop()
-        $.support.transition = false
+        var temp = BootStrap.handleeffects;
+        BootStrap.handleeffects = null;
+        var t = new Element('div',{'id':'modal-test'})
 
-        $("<div id='modal-test'></div>")
-          .bind("shown", function () {
-            ok($('#modal-test').is(":visible"), 'modal visible')
-            ok($('#modal-test').length, 'modal insterted into dom')
-            $(this).modal("hide")
-          })
-          .bind("hidden", function() {
-            ok(!$('#modal-test').is(":visible"), 'modal hidden')
-            $('#modal-test').remove()
-            start()
-          })
-          .modal("show")
+        t.observe('bootstrap:shown',function(){
+          ok($('modal-test').visible(), 'modal visible')
+          ok($('modal-test') !== undefined, 'modal inserted in dom')
+          t.retrieve('bootstrap:modal').hide()
+        })
+        t.observe('bootstrap:hidden',function(){
+          ok(!$('modal-test').visible(), 'modal hidden')
+          this.remove()
+          start()
+        })
+        var tb = new BootStrap.Modal(t)
+        BootStrap.handleeffects = temp;
       })
 
       test("should toggle when toggle is called", function () {
         stop()
-        $.support.transition = false
-        var div = $("<div id='modal-test'></div>")
-        div
-          .bind("shown", function () {
-            ok($('#modal-test').is(":visible"), 'modal visible')
-            ok($('#modal-test').length, 'modal insterted into dom')
-            div.modal("toggle")
-          })
-          .bind("hidden", function() {
-            ok(!$('#modal-test').is(":visible"), 'modal hidden')
-            div.remove()
-            start()
-          })
-          .modal("toggle")
+        var temp = BootStrap.handleeffects;
+        BootStrap.handleeffects = null;
+
+        var div = new Element('div',{'id':'modal-test'})
+
+        div.observe('bootstrap:shown',function(){
+          ok($('modal-test').visible(), 'modal visible')
+          ok($('modal-test') !== undefined, 'modal insterted into dom')
+          div.retrieve('bootstrap:modal').toggle()
+        })
+        div.observe('bootstrap:hidden',function(){
+          ok(!$('modal-test').visible(), 'modal hidden')
+          this.remove()
+          start()
+        })
+        var tb = new BootStrap.Modal(div)
+        BootStrap.handleeffects = temp;
       })
 
       test("should remove from dom when click [data-dismiss=modal]", function () {
         stop()
-        $.support.transition = false
-        var div = $("<div id='modal-test'><span class='close' data-dismiss='modal'></span></div>")
-        div
-          .bind("shown", function () {
-            ok($('#modal-test').is(":visible"), 'modal visible')
-            ok($('#modal-test').length, 'modal insterted into dom')
-            div.find('.close').click()
-          })
-          .bind("hidden", function() {
-            ok(!$('#modal-test').is(":visible"), 'modal hidden')
-            div.remove()
+        var temp = BootStrap.handleeffects;
+        BootStrap.handleeffects = null;
+
+        var div = new Element('div',{'id':'modal-test'});
+        div.insert(new Element('span',{'class':'close','data-dismiss':'modal'}))
+        
+        div.observe('bootstrap:shown',function(){
+            ok($('modal-test').visible(), 'modal visible')
+            ok($('modal-test') !== undefined, 'modal insterted into dom')
+            setTimeout(function(){
+              this.down('.close').simulate('click')
+            }.bind(this),1)
+        })
+        div.observe('bootstrap:hidden',function(){
+            ok(!$('modal-test').visible(), 'modal hidden')
+            this.remove()
             start()
-          })
-          .modal("toggle")
+        })
+        var tb = new BootStrap.Modal(div)
+        BootStrap.handleeffects = temp;
       })
 
       test("should allow modal close with 'backdrop:false'", function () {
         stop()
-        $.support.transition = false
-        var div = $("<div>", { id: 'modal-test', "data-backdrop": false })
-        div
-          .bind("shown", function () {
-            ok($('#modal-test').is(":visible"), 'modal visible')
-            div.modal("hide")
-          })
-          .bind("hidden", function() {
-            ok(!$('#modal-test').is(":visible"), 'modal hidden')
-            div.remove()
+        var temp = BootStrap.handleeffects;
+        BootStrap.handleeffects = null;
+
+        var div = new Element('div',{'id':'modal-test','data-backdrop':false})
+        div.observe('bootstrap:shown',function(){
+            ok($('modal-test').visible(), 'modal visible')
+            this.retrieve('bootstrap:modal').hide()
+        })
+        div.observe('bootstrap:hidden',function(){
+            ok(!$('modal-test').visible(), 'modal hidden')
+            this.remove()
             start()
-          })
-          .modal("show")
+        })
+        var tb = new BootStrap.Modal(div)
+        BootStrap.handleeffects = temp;
       })
-})

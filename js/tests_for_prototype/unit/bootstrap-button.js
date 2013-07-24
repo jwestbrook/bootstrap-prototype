@@ -53,7 +53,6 @@
         var btn = new Element('button',{'class':"btn",'data-toggle':"button"}).update('mdo')
           , inner = new Element('i')
         btn.insert(inner)
-        console.log(btn)
         $('qunit-fixture').insert(btn)
         $$("[data-toggle^=button]").invoke("observe","click",function(e){
           var $btn = e.findElement()

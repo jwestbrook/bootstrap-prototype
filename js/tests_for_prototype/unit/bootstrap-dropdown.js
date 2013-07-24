@@ -1,151 +1,118 @@
-$(function () {
-
     module("bootstrap-dropdowns")
 
-      test("should provide no conflict", function () {
-        var dropdown = $.fn.dropdown.noConflict()
-        ok(!$.fn.dropdown, 'dropdown was set back to undefined (org value)')
-        $.fn.dropdown = dropdown
-      })
-
-      test("should be defined on jquery object", function () {
-        ok($(document.body).dropdown, 'dropdown method is defined')
-      })
-
-      test("should return element", function () {
-        var el = $("<div />")
-        ok(el.dropdown()[0] === el[0], 'same element returned')
+      test("should be defined on BootStrap Namespace", function () {
+        ok(BootStrap.Dropdown, 'dropdown class is defined')
       })
 
       test("should not open dropdown if target is disabled", function () {
-        var dropdownHTML = '<ul class="tabs">'
-          + '<li class="dropdown">'
-          + '<button disabled href="#" class="btn dropdown-toggle" data-toggle="dropdown">Dropdown</button>'
-          + '<ul class="dropdown-menu">'
-          + '<li><a href="#">Secondary link</a></li>'
-          + '<li><a href="#">Something else here</a></li>'
-          + '<li class="divider"></li>'
-          + '<li><a href="#">Another link</a></li>'
-          + '</ul>'
-          + '</li>'
-          + '</ul>'
-          , dropdown = $(dropdownHTML).find('[data-toggle="dropdown"]').dropdown().click()
+        var drd = new Element('ul',{'class':'tabs'});
+        var item = new Element('li',{'class':'dropdown'});
+        item.insert(new Element('button',{'disabled':true,'href':'#','class':'btn dropdown-toggle','data-toggle':'dropdown'}).update('Dropdown'));
+          var list = new Element('ul',{'class':'dropdown-menu'});
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Secondary link')))
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Something else here')))
+          list.insert(new Element('li',{'class':'divider'}));
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Another link')))
+        item.insert(list)
+        drd.insert(item)
+        drd.down('[data-toggle="dropdown"]').observe('click',BootStrap.Dropdown.prototype.toggle)
+        drd.down('[data-toggle="dropdown"]').simulate('click')
 
-        ok(!dropdown.parent('.dropdown').hasClass('open'), 'open class added on click')
-      })
-
-      test("should not open dropdown if target is disabled", function () {
-        var dropdownHTML = '<ul class="tabs">'
-          + '<li class="dropdown">'
-          + '<button href="#" class="btn dropdown-toggle disabled" data-toggle="dropdown">Dropdown</button>'
-          + '<ul class="dropdown-menu">'
-          + '<li><a href="#">Secondary link</a></li>'
-          + '<li><a href="#">Something else here</a></li>'
-          + '<li class="divider"></li>'
-          + '<li><a href="#">Another link</a></li>'
-          + '</ul>'
-          + '</li>'
-          + '</ul>'
-          , dropdown = $(dropdownHTML).find('[data-toggle="dropdown"]').dropdown().click()
-
-        ok(!dropdown.parent('.dropdown').hasClass('open'), 'open class added on click')
+        ok(!drd.down('.dropdown').hasClassName('open'), 'open class added on click')
       })
 
       test("should add class open to menu if clicked", function () {
-        var dropdownHTML = '<ul class="tabs">'
-          + '<li class="dropdown">'
-          + '<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>'
-          + '<ul class="dropdown-menu">'
-          + '<li><a href="#">Secondary link</a></li>'
-          + '<li><a href="#">Something else here</a></li>'
-          + '<li class="divider"></li>'
-          + '<li><a href="#">Another link</a></li>'
-          + '</ul>'
-          + '</li>'
-          + '</ul>'
-          , dropdown = $(dropdownHTML).find('[data-toggle="dropdown"]').dropdown().click()
+        var drd = new Element('ul',{'class':'tabs'});
+        var item = new Element('li',{'class':'dropdown'});
+        item.insert(new Element('button',{'href':'#','class':'btn dropdown-toggle','data-toggle':'dropdown'}).update('Dropdown'));
+          var list = new Element('ul',{'class':'dropdown-menu'});
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Secondary link')))
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Something else here')))
+          list.insert(new Element('li',{'class':'divider'}));
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Another link')))
+        item.insert(list)
+        drd.insert(item)
+        drd.down('[data-toggle="dropdown"]').observe('click',BootStrap.Dropdown.prototype.toggle)
+        drd.down('[data-toggle="dropdown"]').simulate('click')
 
-        ok(dropdown.parent('.dropdown').hasClass('open'), 'open class added on click')
+        ok(drd.down('.dropdown').hasClassName('open'), 'open class added on click')
       })
 
       test("should test if element has a # before assuming it's a selector", function () {
-        var dropdownHTML = '<ul class="tabs">'
-          + '<li class="dropdown">'
-          + '<a href="/foo/" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>'
-          + '<ul class="dropdown-menu">'
-          + '<li><a href="#">Secondary link</a></li>'
-          + '<li><a href="#">Something else here</a></li>'
-          + '<li class="divider"></li>'
-          + '<li><a href="#">Another link</a></li>'
-          + '</ul>'
-          + '</li>'
-          + '</ul>'
-          , dropdown = $(dropdownHTML).find('[data-toggle="dropdown"]').dropdown().click()
+        var drd = new Element('ul',{'class':'tabs'});
+        var item = new Element('li',{'class':'dropdown'});
+        item.insert(new Element('button',{'href':'/foo/','class':'dropdown-toggle','data-toggle':'dropdown'}).update('Dropdown'));
+          var list = new Element('ul',{'class':'dropdown-menu'});
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Secondary link')))
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Something else here')))
+          list.insert(new Element('li',{'class':'divider'}));
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Another link')))
+        item.insert(list)
+        drd.insert(item)
+        drd.down('[data-toggle="dropdown"]').observe('click',BootStrap.Dropdown.prototype.toggle)
+        drd.down('[data-toggle="dropdown"]').simulate('click')
 
-        ok(dropdown.parent('.dropdown').hasClass('open'), 'open class added on click')
+        ok(drd.down('.dropdown').hasClassName('open'), 'open class added on click')
       })
 
 
       test("should remove open class if body clicked", function () {
-        var dropdownHTML = '<ul class="tabs">'
-          + '<li class="dropdown">'
-          + '<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>'
-          + '<ul class="dropdown-menu">'
-          + '<li><a href="#">Secondary link</a></li>'
-          + '<li><a href="#">Something else here</a></li>'
-          + '<li class="divider"></li>'
-          + '<li><a href="#">Another link</a></li>'
-          + '</ul>'
-          + '</li>'
-          + '</ul>'
-          , dropdown = $(dropdownHTML)
-            .appendTo('#qunit-fixture')
-            .find('[data-toggle="dropdown"]')
-            .dropdown()
-            .click()
-        ok(dropdown.parent('.dropdown').hasClass('open'), 'open class added on click')
-        $('body').click()
-        ok(!dropdown.parent('.dropdown').hasClass('open'), 'open class removed')
-        dropdown.remove()
+        var drd = new Element('ul',{'class':'tabs'});
+        var item = new Element('li',{'class':'dropdown'});
+        item.insert(new Element('button',{'href':'#','class':'dropdown-toggle','data-toggle':'dropdown'}).update('Dropdown'));
+          var list = new Element('ul',{'class':'dropdown-menu'});
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Secondary link')))
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Something else here')))
+          list.insert(new Element('li',{'class':'divider'}));
+          list.insert(new Element('li').update(new Element('a',{'href':'#'}).update('Another link')))
+        item.insert(list)
+        drd.insert(item)
+
+        $('qunit-fixture').update(drd)
+        $('qunit-fixture').down('[data-toggle="dropdown"]').observe('click',BootStrap.Dropdown.prototype.toggle)
+        $('qunit-fixture').down('[data-toggle="dropdown"]').simulate('click')
+
+        ok($('qunit-fixture').down('.dropdown').hasClassName('open'), 'open class added on click')
+        $$('body').first().simulate('click')
+        ok(!$('qunit-fixture').down('.dropdown').hasClassName('open'), 'open class removed')
+        $('qunit-fixture').update()
       })
 
       test("should remove open class if body clicked, with multiple drop downs", function () {
-          var dropdownHTML =
-            '<ul class="nav">'
-            + '    <li><a href="#menu1">Menu 1</a></li>'
-            + '    <li class="dropdown" id="testmenu">'
-            + '      <a class="dropdown-toggle" data-toggle="dropdown" href="#testmenu">Test menu <b class="caret"></b></a>'
-            + '      <ul class="dropdown-menu" role="menu">'
-            + '        <li><a href="#sub1">Submenu 1</a></li>'
-            + '      </ul>'
-            + '    </li>'
-            + '</ul>'
-            + '<div class="btn-group">'
-            + '    <button class="btn">Actions</button>'
-            + '    <button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>'
-            + '    <ul class="dropdown-menu">'
-            + '        <li><a href="#">Action 1</a></li>'
-            + '    </ul>'
-            + '</div>'
-          , dropdowns = $(dropdownHTML).appendTo('#qunit-fixture').find('[data-toggle="dropdown"]')
+
+        var nav = new Element('ul',{'class':'nav'});
+        nav.insert(new Element('li').update(new Element('a',{'href':'#menu1'}).update('Menu 1')))
+        var item = new Element('li',{'class':'dropdown','id':'testmenu'})
+        item.insert(new Element('a',{'class':'dropdown-toggle','data-toggle':'dropdown','href':'#testmenu'}).update('Test menu <b class="caret"></b>'))
+          var list = new Element('ul',{'class':'dropdown-menu','role':'menu'});
+          list.insert(new Element('li').update(new Element('a',{'href':'#sub1'}).update('Submenu 1')))
+        item.insert(list);
+        nav.insert(item)
+        var div = new Element('div',{'class':'btn-group'})
+        div.insert(new Element('button',{'class':'btn'}).update('Actions'))
+        div.insert(new Element('button',{'class':'btn dropdown-toggle','data-toggle':'dropdown'}).update('<span class="caret"></span>'))
+        div.insert('<ul class="dropdown-menu"><li><a href="#">Action 1</a></li></ul>')
+
+        $('qunit-fixture').update(nav)
+        $('qunit-fixture').insert(div)
+        var dropdowns = $('qunit-fixture').select('[data-toggle="dropdown"]')
           , first = dropdowns.first()
           , last = dropdowns.last()
+        document.fire('dom:loaded')
 
         ok(dropdowns.length == 2, "Should be two dropdowns")
 
-        first.click()
-        ok(first.parents('.open').length == 1, 'open class added on click')
-        ok($('#qunit-fixture .open').length == 1, 'only one object is open')
-        $('body').click()
-        ok($("#qunit-fixture .open").length === 0, 'open class removed')
+        first.simulate('click')
 
-        last.click()
-        ok(last.parent('.open').length == 1, 'open class added on click')
-        ok($('#qunit-fixture .open').length == 1, 'only one object is open')
-        $('body').click()
-        ok($("#qunit-fixture .open").length === 0, 'open class removed')
+        ok($$('#qunit-fixture .open').length == 1, 'open class added on click')
+        ok($$('#qunit-fixture .open').length == 1, 'only one object is open')
+        $$('body').first().simulate('click')
+        ok($$("#qunit-fixture .open").length === 0, 'open class removed')
 
-        $("#qunit-fixture").html("")
+        last.simulate('click')
+        ok($$('#qunit-fixture .open').length == 1, 'open class added on click')
+        ok($$('#qunit-fixture .open').length == 1, 'only one object is open')
+        $$('body').first().simulate('click')
+        ok($$('#qunit-fixture .open').length === 0, 'open class removed')
+
       })
-
-})
