@@ -60,7 +60,9 @@ BootStrap.Tab = Class.create({
 		
 		previous = $ul.select('.active:last a')[0]
 		
-		$this.fire('bootstrap:show',previous)
+		var showEvent = $this.fire('bootstrap:show',previous)
+
+		if(showEvent.defaultPrevented) return
 		
 		
 		$target = $$(selector)[0]

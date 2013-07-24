@@ -143,7 +143,8 @@ BootStrap.Carousel = Class.create({
 
 
 		if (BootStrap.handleeffects == 'css' && this.$element.hasClassName('slide')) {
-			this.$element.fire('bootstrap:slide')
+			var slideEvent = this.$element.fire('bootstrap:slide')
+			if(slideEvent.defaultPrevented) return
 
 			this.$element.on(BootStrap.transitionendevent, function (e) {
 				$next.removeClassName([type, direction].join(' ')).addClassName('active')
@@ -182,7 +183,8 @@ BootStrap.Carousel = Class.create({
 			})
 			
 		} else {
-			this.$element.fire('bootstrap:slide')
+			var slideEvent = this.$element.fire('bootstrap:slide')
+			if(slideEvent.defaultPrevented) return
 			$active.removeClassName('active')
 			$next.addClassName('active')
 			this.sliding = false

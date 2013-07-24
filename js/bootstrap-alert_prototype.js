@@ -57,7 +57,9 @@ BootStrap.Alert = Class.create({
 	
 		($parent != undefined && $parent.length) || ($parent = $this.hasClassName('alert') ? $this : $this.up())
 	
-		$parent.fire('bootstrap:close')
+		var closeEvent = $parent.fire('bootstrap:close')
+
+		if(closeEvent.defaultPrevented) return
 	
 		function removeElement() {
 			$parent.fire('bootstrap:closed')

@@ -138,7 +138,8 @@ BootStrap.Tooltip = Class.create({
 		, layout
 		
 		if (this.hasContent() && this.enabled) {
-			this.$element.fire('bootstrap:show')
+			var showEvent = this.$element.fire('bootstrap:show')
+			if(showEvent.defaultPrevented) return
 			$tip = this.tip()
 			this.setContent()
 			
@@ -250,6 +251,9 @@ BootStrap.Tooltip = Class.create({
 	, hide: function () {
 		var that = this
 		, $tip = this.tip()
+
+		var hideEvent = this.$element.fire('bootstrap:hide')
+		if(hideEvent.defaultPrevented) return
 		
 		if(BootStrap.handleeffects == 'css' && this.$tip.hasClassName('fade')){
 			var timeout = setTimeout(function () {
