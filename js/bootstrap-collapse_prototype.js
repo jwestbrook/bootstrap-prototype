@@ -146,7 +146,9 @@ BootStrap.Collapse = Class.create({
 			this.$element.fire(completeEvent)
 		}.bind(this)
 		
-		this.$element.fire('bootstrap:'+startEvent)
+		var startEventObject = this.$element.fire('bootstrap:'+startEvent)
+
+		if(startEventObject.defaultPrevented) return
 		
 		this.transitioning = 1
 		
