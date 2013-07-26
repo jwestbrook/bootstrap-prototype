@@ -50,41 +50,41 @@ BootStrap.Tab = Class.create({
 		, previous
 		, $target
 		, e
-		
+
+
 		if (!selector) {
 			selector = $this.readAttribute('href')
 			selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
 		}
 		
-		if ( $this.up('li').hasClassName('active') ) return
+		if ( $this.up('li') !== undefined && $this.up('li').hasClassName('active') ) return
 		
-		previous = $ul.select('.active:last a')[0]
+		previous = $ul !== undefined ? $ul.select('.active:last a')[0] : null
 		
-		var showEvent = $this.fire('bootstrap:show',previous)
+		var showEvent = $this.fire('bootstrap:show',{'relatedTarget' : previous})
 
 		if(showEvent.defaultPrevented) return
 		
-		
 		$target = $$(selector)[0]
-		
+
 		this.activate($this.up('li'), $ul)
-		this.activate($target, $target.up(), function () {
-			$this.fire('bootstrap:shown',previous)
+		this.activate($target, $target !== undefined ? $target.up() : undefined , function () {
+			$this.fire('bootstrap:shown',{'relatedTarget':previous})
 		})
 	}
 	
 	, activate: function ( element, container, callback) {
-		var $active = container.select('> .active')[0]
-		var transitionCSS = callback && BootStrap.handleeffects == 'css' && $active.hasClassName('fade')
+		var $active = container !== undefined ? container.select('> .active')[0] : undefined
+		var transitionCSS = callback && BootStrap.handleeffects == 'css' && $active !== undefined && $active.hasClassName('fade')
 		var transitionEffect = BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined'
 		
 		function next() {
-			$active
+			$active !== undefined ? $active
 			.removeClassName('active')
 			.select('> .dropdown-menu > .active')
-			.invoke('removeClassName','active')
+			.invoke('removeClassName','active') : ''
 			
-			element.addClassName('active')
+			element !== undefined ? element.addClassName('active') : ''
 			
 			
 			if (transitionCSS) {
@@ -95,10 +95,10 @@ BootStrap.Tab = Class.create({
 					element.addClassName('in')
 				}})
 			} else {
-				element.removeClassName('fade')
+				element !== undefined ? element.removeClassName('fade') : ''
 			}
-			
-			if ( element.up('.dropdown-menu') ) {
+
+			if ( element !== undefined && element.up('.dropdown-menu') ) {
 				element.up('li.dropdown').addClassName('active')
 			}
 			
@@ -110,9 +110,9 @@ BootStrap.Tab = Class.create({
 				next(e)
 				this.stopObserving(BootStrap.transitionendevent)
 			});
-			$active.removeClassName('in')
+			$active !== undefined ? $active.removeClassName('in') : ''
 		} else if (transitionEffect){
-			if($active.hasClassName('in') && $active.hasClassName('fade')){
+			if($active !== undefined && $active.hasClassName('in') && $active.hasClassName('fade')){
 				new Effect.Fade($active,{duration:0.3,afterFinish:function(){
 					$active.removeClassName('in')
 					next()
@@ -123,7 +123,7 @@ BootStrap.Tab = Class.create({
 			}
 		} else {
 			next()
-			$active.removeClassName('in')
+			$active !== undefined ? $active.removeClassName('in') : ''
 		}
 		
 	}

@@ -1,86 +1,90 @@
-$(function () {
-
     module("bootstrap-tabs")
 
-      test("should provide no conflict", function () {
-        var tab = $.fn.tab.noConflict()
-        ok(!$.fn.tab, 'tab was set back to undefined (org value)')
-        $.fn.tab = tab
-      })
-
-      test("should be defined on jquery object", function () {
-        ok($(document.body).tab, 'tabs method is defined')
-      })
-
-      test("should return element", function () {
-        ok($(document.body).tab()[0] == document.body, 'document.body returned')
+      test("should be defined on BootStrap Namespace", function () {
+        ok(BootStrap.Tab, 'tabs class is defined')
       })
 
       test("should activate element by tab id", function () {
-        var tabsHTML =
-            '<ul class="tabs">'
-          + '<li><a href="#home">Home</a></li>'
-          + '<li><a href="#profile">Profile</a></li>'
-          + '</ul>'
+        var tabshtml = new Element('ul',{'class':'tabs'});
+        tabshtml.insert(new Element('li').update(new Element('a',{'href':'#home'}).update('Home')));
+        tabshtml.insert(new Element('li').update(new Element('a',{'href':'#profile'}).update('Profile')))
 
-        $('<ul><li id="home"></li><li id="profile"></li></ul>').appendTo("#qunit-fixture")
+        var t = new Element('ul')
+        t.insert(new Element('li',{'id':'home'}))
+        t.insert(new Element('li',{'id':'profile'}))
 
-        $(tabsHTML).find('li:last a').tab('show')
-        equals($("#qunit-fixture").find('.active').attr('id'), "profile")
+        $('qunit-fixture').insert(t)
 
-        $(tabsHTML).find('li:first a').tab('show')
-        equals($("#qunit-fixture").find('.active').attr('id'), "home")
+        var tb = new BootStrap.Tab(tabshtml.down('li:last a'))
+        tb.show();
+        equals($("qunit-fixture").down('.active').readAttribute('id'), "profile")
+
+        tb = new BootStrap.Tab(tabshtml.down('li:first a'))
+        tb.show();
+        equals($("qunit-fixture").down('.active').readAttribute('id'), "home")
       })
 
       test("should activate element by tab id", function () {
-        var pillsHTML =
-            '<ul class="pills">'
-          + '<li><a href="#home">Home</a></li>'
-          + '<li><a href="#profile">Profile</a></li>'
-          + '</ul>'
+        var pillshtml = new Element('ul',{'class':'pills'})
+        pillshtml.insert(new Element('li').update(new Element('a',{'href':'#home'}).update('Home')))
+        pillshtml.insert(new Element('li').update(new Element('a',{'href':'#profile'}).update('Profile')))
 
-        $('<ul><li id="home"></li><li id="profile"></li></ul>').appendTo("#qunit-fixture")
+        var t = new Element('ul')
+        t.insert(new Element('li',{'id':'home'}))
+        t.insert(new Element('li',{'id':'profile'}))
+        $('qunit-fixture').update(t)
 
-        $(pillsHTML).find('li:last a').tab('show')
-        equals($("#qunit-fixture").find('.active').attr('id'), "profile")
+        var tb = new BootStrap.Tab(pillshtml.down('li:last a'))
+        tb.show()
+        equals($("qunit-fixture").down('.active').readAttribute('id'), "profile")
 
-        $(pillsHTML).find('li:first a').tab('show')
-        equals($("#qunit-fixture").find('.active').attr('id'), "home")
+        tb = new BootStrap.Tab(pillshtml.down('li:first a'))
+        tb.show()
+        equals($("qunit-fixture").down('.active').readAttribute('id'), "home")
       })
 
 
       test("should not fire closed when close is prevented", function () {
-        $.support.transition = false
-        stop();
-        $('<div class="tab"/>')
-          .bind('show', function (e) {
-            e.preventDefault();
-            ok(true);
-            start();
-          })
-          .bind('shown', function () {
-            ok(false);
-          })
-          .tab('show')
+        stop()
+        var temp = BootStrap.handleeffects;
+        BootStrap.handleeffects = null;
+
+        var div = new Element('div',{'class':'tab'})
+        div.observe('bootstrap:show',function(e){
+          e.preventDefault()
+          ok(true)
+          start()
+        })
+        div.observe('bootstrap:shown',function(){
+          ok(false)
+        })
+
+        new BootStrap.Tab(div).show()
       })
 
       test("show and shown events should reference correct relatedTarget", function () {
-        var dropHTML =
-            '<ul class="drop">'
-          + '<li class="dropdown"><a data-toggle="dropdown" href="#">1</a>'
-          + '<ul class="dropdown-menu">'
-          + '<li><a href="#1-1" data-toggle="tab">1-1</a></li>'
-          + '<li><a href="#1-2" data-toggle="tab">1-2</a></li>'
-          + '</ul>'
-          + '</li>'
-          + '</ul>'
 
-        $(dropHTML).find('ul>li:first a').tab('show').end()
-          .find('ul>li:last a').on('show', function(event){
-            equals(event.relatedTarget.hash, "#1-1")
-          }).on('shown', function(event){
-            equals(event.relatedTarget.hash, "#1-1")
-          }).tab('show')
+        var drophtml = new Element('ul',{'class':'drop'})
+        var item = new Element('li',{'class':'dropdown'})
+        item.insert(new Element('a',{'data-toggle':'dropdown','href':'#'}).update(1))
+        var list = new Element('ul',{'class':'dropdown-menu'})
+        list.insert(new Element('li').update(new Element('a',{'href':'#1-1','data-toggle':'tab'}).update('1-1')))
+        list.insert(new Element('li').update(new Element('a',{'href':'#1-2','data-toggle':'tab'}).update('1-2')))
+        item.insert(list)
+        drophtml.insert(item)
+
+        // console.log(drophtml.down('ul>li:first a'))
+
+        var tb = new BootStrap.Tab(drophtml.down('ul>li:first a'))
+        var tc = new BootStrap.Tab(drophtml.down('ul>li:last a'))
+        drophtml.down('ul>li:last a').observe('bootstrap:show',function(e){
+          equals(e.memo.relatedTarget.hash, "#1-1")
+        })
+        drophtml.down('ul>li:last a').observe('bootstrap:shown',function(e){
+          equals(e.memo.relatedTarget.hash, "#1-1")
+        })
+
+        tb.show()
+        tc.show()
+
       })
-
-})
