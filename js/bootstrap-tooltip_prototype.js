@@ -226,7 +226,7 @@ BootStrap.Tooltip = Class.create({
 			this.replaceArrow(actualHeight - height, actualHeight, 'top')
 		}
 
-		if(typeof offset.top == 'srting' && !offset.top.match(/px/)){
+		if(typeof offset.top === 'string' && !offset.top.match(/px/)){
 			offset.top += 'px'
 			offset.left += 'px'
 		}
