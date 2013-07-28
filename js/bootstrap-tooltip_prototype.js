@@ -44,7 +44,7 @@ BootStrap.Tooltip = Class.create({
 	
 		this.options = {
 			animation: true
-			, placement: 'top'
+			, placement: element.hasAttribute('data-placement') ? element.readAttribute('data-placement') : 'top'
 			, selector: false
 			, template: new Element('div',{'class':'tooltip'}).insert(new Element('div',{'class':'tooltip-arrow'})).insert(new Element('div',{'class':'tooltip-inner'}))
 			, trigger: 'hover focus'
@@ -304,7 +304,7 @@ BootStrap.Tooltip = Class.create({
 				, height: el.offsetHeight
 			})
 		}
-		return Object.extend(obj,el.cumulativeOffset())
+		return Object.extend(obj,el.positionedOffset())
 	}
 	
 	, getTitle: function () {
