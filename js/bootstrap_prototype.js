@@ -775,13 +775,14 @@ BootStrap.Modal = Class.create({
 		}
 	}
 });
+
 BootStrap.Tooltip = Class.create({
 	initialize : function (element, options) {
 		element.store('bootstrap:tooltip',this)
 	
 		this.options = {
 			animation: true
-			, placement: 'top'
+			, placement: element.hasAttribute('data-placement') ? element.readAttribute('data-placement') : 'top'
 			, selector: false
 			, template: new Element('div',{'class':'tooltip'}).insert(new Element('div',{'class':'tooltip-arrow'})).insert(new Element('div',{'class':'tooltip-inner'}))
 			, trigger: 'hover focus'
@@ -963,7 +964,7 @@ BootStrap.Tooltip = Class.create({
 			this.replaceArrow(actualHeight - height, actualHeight, 'top')
 		}
 
-		if(typeof offset.top == 'srting' && !offset.top.match(/px/)){
+		if(typeof offset.top === 'string' && !offset.top.match(/px/)){
 			offset.top += 'px'
 			offset.left += 'px'
 		}
@@ -1041,7 +1042,7 @@ BootStrap.Tooltip = Class.create({
 				, height: el.offsetHeight
 			})
 		}
-		return Object.extend(obj,el.cumulativeOffset())
+		return Object.extend(obj,el.positionedOffset())
 	}
 	
 	, getTitle: function () {
@@ -1084,6 +1085,7 @@ BootStrap.Tooltip = Class.create({
 		this.hide().$element.stopObserving()
 	}
 });
+
 BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 	initialize : function ($super,element, options) {
 		element.store('bootstrap:popover',this)
@@ -1135,6 +1137,7 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 		this.$element.stopObserving(this.options.trigger)
 	}
 });
+
 BootStrap.Tab = Class.create({
 	initialize : function (element) {
 		element.store('bootstrap:tab',this)
@@ -1225,6 +1228,7 @@ BootStrap.Tab = Class.create({
 		
 	}
 });
+
 BootStrap.Typeahead = Class.create({
 
 	initialize: function(element, options) {
@@ -1558,6 +1562,7 @@ document.observe("dom:loaded",function(){
 		}
 		e.stop();
 	});
+
 	//Bootstrap.Tab
 	$$('[data-toggle="tab"], [data-toggle="pill"]').invoke('observe','click',function(e){
 		e.preventDefault();
