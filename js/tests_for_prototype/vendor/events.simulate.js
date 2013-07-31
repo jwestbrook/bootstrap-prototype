@@ -17,7 +17,7 @@
 
 	var eventMatchers = {
 		'HTMLEvents': /^(?:load|unload|abort|error|select|hashchange|popstate|change|submit|reset|focus|blur|resize|scroll)$/,
-		'MouseEvents': /^(?:click|mouse(?:down|up|over|move|out))$/
+		'MouseEvents': /^(?:click|mouse(?:down|up|over|move|out|enter|leave))$/
 	};
 	var defaultOptions = {
 		pointerX: 0,
@@ -63,7 +63,7 @@
 		for (var name in eventMatchers) {
 			if (eventMatchers[name].test(eventName)) { eventType = name; break; }
 		}
-	
+
 		if ( !eventType ) {
 			return Element.fire(element,'custom:'+eventName);
 		}
