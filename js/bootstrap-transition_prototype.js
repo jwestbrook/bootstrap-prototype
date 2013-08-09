@@ -26,6 +26,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 */
 
 
+"use strict";
 
   /* CSS TRANSITION SUPPORT (http://www.modernizr.com/)
    * ======================================================= */
