@@ -1,7 +1,7 @@
 /* ===========================================================
  * bootstrap_prototype.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html
-  * ===========================================================
+ * ===========================================================
  * Copyright 2012 Twitter, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +24,9 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 
 */
+/* BUILD TIME Fri Aug 09 2013 08:18:00 GMT-0700 (PDT) */
 
-
+"use strict";
 var BootStrap = {
 	transitionendevent : null,
 	handleeffects : null
@@ -55,8 +56,7 @@ if(BootStrap.handleeffects === null && typeof Scriptaculous !== 'undefined' && t
 	BootStrap.handleeffects = 'effect';
 }
 
-//Define all Classes
-
+//BootStrap.Alert
 BootStrap.Alert = Class.create({
 	initialize : function (element) {
 		element.store('bootstrap:alert',this)
@@ -64,18 +64,18 @@ BootStrap.Alert = Class.create({
 	},
 	close : function (e) {
 		var $this = $(this)
-		  , selector = $this.readAttribute('data-target')
-		  , $parent
-		  
+		var selector = $this.readAttribute('data-target')
+		var $parent
+
 	
 		if (!selector) {
 			selector = $this.href
 			selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '').replace('#','') //strip for ie7
 		}
 		
-		(selector != undefined && selector.length > 0) ? $parent = $(selector) : '';
+		(selector !== undefined && selector.length > 0) ? $parent = $(selector) : '';
 	
-		($parent != undefined && $parent.length) || ($parent = $this.hasClassName('alert') ? $this : $this.up())
+		($parent !== undefined && $parent.length) || ($parent = $this.hasClassName('alert') ? $this : $this.up())
 	
 		var closeEvent = $parent.fire('bootstrap:close')
 
@@ -108,6 +108,7 @@ BootStrap.Alert = Class.create({
 	}
 });
 
+//BootStrap.Button
 BootStrap.Button = Class.create({
 	initialize : function (element, options) {
 		element.store('bootstrap:button',this)
@@ -151,6 +152,8 @@ BootStrap.Button = Class.create({
 	}
 });
 
+
+//BootStrap.Carousel
 BootStrap.Carousel = Class.create({
 
 	initialize : function (element, options) {
@@ -230,12 +233,13 @@ BootStrap.Carousel = Class.create({
 		, fallback  = type == 'next' ? 'first' : 'last'
 		, that = this
 		, e
+		, slideEvent
 		
 		this.sliding = true
 		
 		isCycling && this.pause()
 
-		$next = $next != undefined ? $next : this.$element.select('.item')[fallback]()
+		$next = $next !== undefined ? $next : this.$element.select('.item')[fallback]()
 
 		type = (type == 'previous' ? 'prev' : type)
 /*
@@ -258,7 +262,7 @@ BootStrap.Carousel = Class.create({
 
 
 		if (BootStrap.handleeffects == 'css' && this.$element.hasClassName('slide')) {
-			var slideEvent = this.$element.fire('bootstrap:slide')
+			slideEvent = this.$element.fire('bootstrap:slide')
 			if(slideEvent.defaultPrevented) return
 
 			this.$element.on(BootStrap.transitionendevent, function (e) {
@@ -298,7 +302,7 @@ BootStrap.Carousel = Class.create({
 			})
 			
 		} else {
-			var slideEvent = this.$element.fire('bootstrap:slide')
+			slideEvent = this.$element.fire('bootstrap:slide')
 			if(slideEvent.defaultPrevented) return
 			$active.removeClassName('active')
 			$next.addClassName('active')
@@ -311,6 +315,7 @@ BootStrap.Carousel = Class.create({
 	}
 });
 
+//BootStrap.Collapse
 BootStrap.Collapse = Class.create({
 	initialize : function (element, options) {
 		this.$element = $(element)
@@ -380,7 +385,7 @@ BootStrap.Collapse = Class.create({
 				newstyle[dimension] = this.$element[scroll]+'px'
 				this.$element.setStyle(newstyle)
 			}.bind(this)})
-		/* 		   this.$element[dimension](this.$element[scroll] */
+		/*	this.$element[dimension](this.$element[scroll] */
 		}
 	}
 	
@@ -391,7 +396,7 @@ BootStrap.Collapse = Class.create({
 		this.reset(this.$element.getStyle(dimension))
 		this.transition('removeClassName', 'hide', 'bootstrap:hidden')
 		this.reset('0px')
-		if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && Effect.Queues.get('global').effects.length == 0)
+		if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && Effect.Queues.get('global').effects.length === 0)
 		{
 			var newstyle = {}
 			newstyle[dimension] = '0px'
@@ -467,13 +472,16 @@ BootStrap.Collapse = Class.create({
 	
 });
 
-var toggle = '[data-toggle=dropdown]';
+
+
+
+//BootStrap.Dropdown
 BootStrap.Dropdown = Class.create({
 	initialize : function (element) {
 		element.store('bootstrap:dropdown',this)
 		var $el = $(element).on('click',this.toggle)
 		$$('html')[0].on('click', function () {
-		$el.up().removeClassName('open')
+			$el.up().removeClassName('open')
 		})
 	}
 	,toggle: function (e) {
@@ -483,17 +491,17 @@ BootStrap.Dropdown = Class.create({
 
 		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
 
-		$parent = getParent($this)
+		$parent = BootStrap.Dropdown.prototype.getParent($this)
 
 		isActive = $parent.hasClassName('open')
 
-		clearMenus()
+		BootStrap.Dropdown.prototype.clearMenus()
 
 		if (!isActive) {
 			if ('ontouchstart' in document.documentElement) {
 				// if mobile we we use a backdrop because click events don't delegate
 				var backdrop = new Element('div',{'class':'dropdown-backdrop'});
-				backdrop.observe('click',clearMenus);
+				backdrop.observe('click',BootStrap.Dropdown.prototype.clearMenus);
 				$this.insert({'before':backdrop})
 			}
 
@@ -521,13 +529,13 @@ BootStrap.Dropdown = Class.create({
 
 		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
 
-		$parent = getParent($this)
+		$parent = BootStrap.Dropdown.prototype.getParent($this)
 
 		isActive = $parent.hasClassName('open')
 
 		if (!isActive || (isActive && e.keyCode == Event.KEY_ESC))
 		{
-			if (e.which == Event.KEY_ESC) $parent.select(toggle)[0].focus()
+			if (e.which == Event.KEY_ESC) $parent.select('[data-toggle=dropdown]')[0].focus()
 			return $this.click()
 		}
 
@@ -549,40 +557,39 @@ BootStrap.Dropdown = Class.create({
 
 		$items[index].focus()
 	}
+	, clearMenus : function(){
+		$$('.dropdown-backdrop').invoke('remove')
+		$$('[data-toggle=dropdown]').each(function(i) {
+			BootStrap.Dropdown.prototype.getParent(i).removeClassName('open')
+		})
+	}
+	, getParent : function(element){
+		var selector = element.readAttribute('data-target')
+		, $parent
 
+		if (!selector) {
+			selector = element.readAttribute('href')
+			selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#' //strip for ie7
+		}
+
+		$parent = selector && $$(selector)
+
+		if (!$parent || !$parent.length) $parent = element.up()
+
+		return $parent
+
+	}
 });
 
-function clearMenus() {
-	$$('.dropdown-backdrop').invoke('remove')
-	$$(toggle).each(function(i) {
-	getParent(i).removeClassName('open')
-	})
-}
-
-function getParent($this) {
-	var selector = $this.readAttribute('data-target')
-	, $parent
-
-	if (!selector) {
-		selector = $this.readAttribute('href')
-		selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#' //strip for ie7
-	}
-
-	$parent = selector && $$(selector)
-
-	if (!$parent || !$parent.length) $parent = $this.up()
-
-	return $parent
-}
-
+//BootStrap.Modal
 BootStrap.Modal = Class.create({
 	initialize : function (element, options) {
 		element.store('bootstrap:modal',this)
 		this.$element = $(element);
-		this.options = options != undefined ? options : {}
-		this.options.backdrop = this.options.backdrop != undefined ? options.backdrop : true
-		this.options.keyboard = this.options.keyboard != undefined ? options.keyboard : true
-		this.options.show = this.options.show != undefined ? options.show : true
+		this.options = options !== undefined ? options : {}
+		this.options.backdrop = this.options.backdrop !== undefined ? options.backdrop : true
+		this.options.keyboard = this.options.keyboard !== undefined ? options.keyboard : true
+		this.options.show = this.options.show !== undefined ? options.show : true
 
 
 		if(this.options.show)
@@ -614,7 +621,7 @@ BootStrap.Modal = Class.create({
 		this.backdrop(function () {
 			var transition = (BootStrap.handleeffects == 'css' || (BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined')) && that.$element.hasClassName('fade')
 
-			if (that.$element.up('body') == undefined) {
+			if (that.$element.up('body') === undefined) {
 				$$("body")[0].insert(that.$element);
 			}
 			that.$element.setStyle({display:'block'})
@@ -776,6 +783,9 @@ BootStrap.Modal = Class.create({
 	}
 });
 
+
+
+//BootStrap.Tooltip
 BootStrap.Tooltip = Class.create({
 	initialize : function (element, options) {
 		element.store('bootstrap:tooltip',this)
@@ -792,13 +802,22 @@ BootStrap.Tooltip = Class.create({
 			, container: false
 		};
 		Object.extend(this.options,options);
+
+		if(typeof this.options.container == 'string'){
+			this.options.container = $$(this.options.container).first()
+		}
+
+		if(typeof this.options.template == 'string'){
+			this.options.template = new Element('div').update(this.options.template).down();
+		}
+
 		if (this.options.delay && typeof this.options.delay == 'number') {
 			this.options.delay = {
 				show: options.delay
 				, hide: options.delay
 			}
 		}
-		if(this.options.subclass == undefined) {
+		if(this.options.subclass === undefined) {
 			this.init('tooltip', element)
 		}
 	}
@@ -817,7 +836,9 @@ BootStrap.Tooltip = Class.create({
 		triggers = this.options.trigger.split(' ')
 		
 		triggers.each(function(tr){
-			if(tr == 'click') {
+			if(tr == 'click' && this.options.selector) {
+				this.$element.on('click',this.options.selector, this.toggle.bind(this))
+			} else if(tr == 'click') {
 				this.$element.observe('click', this.toggle.bind(this))
 			} else if (tr != 'manual') {
 				eventIn = tr == 'hover' ? 'mouseenter' : 'focus'
@@ -828,8 +849,9 @@ BootStrap.Tooltip = Class.create({
 		},this)
 
 		if(this.options.selector){
-			this._options = Object.extend({},this.options)
-			Object.extend(this._options,{ trigger: 'manual', selector: '' })
+			this.$element = this.$element.down(this.options.selector)
+			this.$element.store('bootstrap:tooltip',this)
+			this.fixTitle()
 		} else {
 			this.fixTitle()
 		}
@@ -874,7 +896,7 @@ BootStrap.Tooltip = Class.create({
 		, placement
 		, tp
 		, layout
-		
+
 		if (this.hasContent() && this.enabled) {
 			var showEvent = this.$element.fire('bootstrap:show')
 			if(showEvent.defaultPrevented) return
@@ -982,7 +1004,7 @@ BootStrap.Tooltip = Class.create({
 			title = title.escapeHTML()
 		}
 		
-		$tip.select('.tooltip-inner')[0].update(title)
+		$tip.down('.tooltip-inner').update(title)
 		$tip.removeClassName('fade in top bottom left right')
 	}
 	
@@ -1003,19 +1025,19 @@ BootStrap.Tooltip = Class.create({
 				clearTimeout(timeout)
 				$tip ? $tip.remove() : ''
 				this.stopObserving(BootStrap.transitionendevent)
-				that.$element.fire('bootrap:hidden')
+				that.$element.fire('bootstrap:hidden')
 			})
 			$tip.removeClassName('in')
 		} else if(BootStrap.handleeffects == 'effect' && this.$tip.hasClassName('fade')) {
 			new Effect.Fade($tip,{duration:0.3,from:$tip.getOpacity()*1,afterFinish:function(){
 				$tip.removeClassName('in')
 				$tip.remove()
-				that.$element.fire('bootrap:hidden')
+				that.$element.fire('bootstrap:hidden')
 			}})
 		} else {
 			$tip.removeClassName('in')
-			$tip.remove()
-			this.$element.fire('bootrap:hidden')
+			$tip.up('body') !== undefined ? $tip.remove() : ''
+			this.$element.fire('bootstrap:hidden')
 		}
 		
 		return this
@@ -1051,7 +1073,7 @@ BootStrap.Tooltip = Class.create({
 		, o = this.options
 		
 		title = $e.readAttribute('data-original-title')
-		|| (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
+		|| (typeof o.title == 'function' ? o.title.call($e) :  o.title)
 		
 		return title
 	}
@@ -1082,10 +1104,22 @@ BootStrap.Tooltip = Class.create({
 		this.tip().hasClassName('in') ? this.hide() : this.show()		
 	}
 	, destroy: function () {
-		this.hide().$element.stopObserving()
+		this.hide()
+		var eventIn, eventOut;
+		this.options.trigger.split(' ').each(function(tr){
+			if(tr == 'click') {
+				this.$element.stopObserving('click')
+			} else if (tr != 'manual') {
+				eventIn = tr == 'hover' ? 'mouseenter' : 'focus'
+				eventOut = tr == 'hover' ? 'mouseleave' : 'blur'
+				this.$element.stopObserving(eventIn)
+				this.$element.stopObserving(eventOut)
+			}
+		},this)
 	}
 });
 
+//BootStrap.Popover
 BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 	initialize : function ($super,element, options) {
 		element.store('bootstrap:popover',this)
@@ -1138,6 +1172,7 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 	}
 });
 
+//BootStrap.Tab
 BootStrap.Tab = Class.create({
 	initialize : function (element) {
 		element.store('bootstrap:tab',this)
@@ -1150,41 +1185,41 @@ BootStrap.Tab = Class.create({
 		, previous
 		, $target
 		, e
-		
+
+
 		if (!selector) {
 			selector = $this.readAttribute('href')
 			selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
 		}
 		
-		if ( $this.up('li').hasClassName('active') ) return
+		if ( $this.up('li') !== undefined && $this.up('li').hasClassName('active') ) return
 		
-		previous = $ul.select('.active:last a')[0]
+		previous = $ul !== undefined ? $ul.select('.active:last a')[0] : null
 		
-		var showEvent = $this.fire('bootstrap:show',previous)
+		var showEvent = $this.fire('bootstrap:show',{'relatedTarget' : previous})
 
 		if(showEvent.defaultPrevented) return
 		
-		
 		$target = $$(selector)[0]
-		
+
 		this.activate($this.up('li'), $ul)
-		this.activate($target, $target.up(), function () {
-			$this.fire('bootstrap:shown',previous)
+		this.activate($target, $target !== undefined ? $target.up() : undefined , function () {
+			$this.fire('bootstrap:shown',{'relatedTarget':previous})
 		})
 	}
 	
 	, activate: function ( element, container, callback) {
-		var $active = container.select('> .active')[0]
-		var transitionCSS = callback && BootStrap.handleeffects == 'css' && $active.hasClassName('fade')
+		var $active = container !== undefined ? container.select('> .active')[0] : undefined
+		var transitionCSS = callback && BootStrap.handleeffects == 'css' && $active !== undefined && $active.hasClassName('fade')
 		var transitionEffect = BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined'
 		
 		function next() {
-			$active
+			$active !== undefined ? $active
 			.removeClassName('active')
 			.select('> .dropdown-menu > .active')
-			.invoke('removeClassName','active')
+			.invoke('removeClassName','active') : ''
 			
-			element.addClassName('active')
+			element !== undefined ? element.addClassName('active') : ''
 			
 			
 			if (transitionCSS) {
@@ -1195,10 +1230,10 @@ BootStrap.Tab = Class.create({
 					element.addClassName('in')
 				}})
 			} else {
-				element.removeClassName('fade')
+				element !== undefined ? element.removeClassName('fade') : ''
 			}
-			
-			if ( element.up('.dropdown-menu') ) {
+
+			if ( element !== undefined && element.up('.dropdown-menu') ) {
 				element.up('li.dropdown').addClassName('active')
 			}
 			
@@ -1210,9 +1245,9 @@ BootStrap.Tab = Class.create({
 				next(e)
 				this.stopObserving(BootStrap.transitionendevent)
 			});
-			$active.removeClassName('in')
+			$active !== undefined ? $active.removeClassName('in') : ''
 		} else if (transitionEffect){
-			if($active.hasClassName('in') && $active.hasClassName('fade')){
+			if($active !== undefined && $active.hasClassName('in') && $active.hasClassName('fade')){
 				new Effect.Fade($active,{duration:0.3,afterFinish:function(){
 					$active.removeClassName('in')
 					next()
@@ -1223,12 +1258,13 @@ BootStrap.Tab = Class.create({
 			}
 		} else {
 			next()
-			$active.removeClassName('in')
+			$active !== undefined ? $active.removeClassName('in') : ''
 		}
 		
 	}
 });
 
+//BootStrap.Typeahead
 BootStrap.Typeahead = Class.create({
 
 	initialize: function(element, options) {
@@ -1482,16 +1518,17 @@ BootStrap.Typeahead = Class.create({
 
 
 
-//run all dom:loaded at end
+document.observe('dom:loaded',function(){
 
-document.observe("dom:loaded",function(){
 
 	//BootStrap.Alert
+
 	$$('.alert [data-dismiss="alert"]').each(function(i){
 		new BootStrap.Alert(i)
 	})
 
 	//BootStrap.Button
+
 	$$("[data-toggle^=button]").invoke("observe","click",function(e){
 		var $btn = e.findElement()
 		if(!$btn.hasClassName('btn')) $btn = $btn.up('.btn')
@@ -1499,12 +1536,13 @@ document.observe("dom:loaded",function(){
 	});
 
 	//BootStrap.Carousel
+
 	document.on('click','[data-slide], [data-slide-to]',function(e){
 		var $this = e.findElement(), href
 		, $target = $($this.readAttribute('data-target') || (href = $this.readAttribute('href')) && href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')) //strip for ie7
 		, options = Object.extend({})
 		, to = $this.readAttribute('data-slide')
-		, slideindex
+		, slideIndex
 		
 		$target.retrieve('bootstrap:carousel')[to]()
 
@@ -1515,8 +1553,9 @@ document.observe("dom:loaded",function(){
 		
 		e.stop()
 	});
-	
+
 	//BootStrap.Collapse
+
 	$$('[data-toggle="collapse"]').each(function(e){
 		var href = e.readAttribute('href');
 		href = e.hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '') : null
@@ -1541,19 +1580,23 @@ document.observe("dom:loaded",function(){
 		$$(target).first().retrieve('bootstrap:collapse').toggle();
 	});
 
-	//Bootstrap.Dropdown
-	document.observe('click',clearMenus)
+	//BootStrap.Dropdown
+/* APPLY TO STANDARD DROPDOWN ELEMENTS
+ * =================================== */
+
+	document.observe('click',BootStrap.Dropdown.prototype.clearMenus)
 	$$('.dropdown form').invoke('observe','click',function(e){
 		e.stop();
 	});
-	$$(toggle).invoke('observe','click',BootStrap.Dropdown.prototype.toggle)
-	$$(toggle+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)
-	
-	//Bootstrap.Modal
+	$$('[data-toggle=dropdown]').invoke('observe','click',BootStrap.Dropdown.prototype.toggle)
+	$$('[data-toggle=dropdown]'+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)
+
+	//BootStrap.Modal
+
 	$$("[data-toggle='modal']").invoke("observe","click",function(e){
 		var target = this.readAttribute("data-target") || (this.href && this.href.replace(/.*(?=#[^\s]+$)/,'').replace(/#/,''));
 		var options = {};
-		if($(target) != undefined) {
+		if($(target) !== undefined) {
 			target = $(target);
 			if(!/#/.test(this.href)) {
 				options.remote = this.href;
@@ -1563,13 +1606,15 @@ document.observe("dom:loaded",function(){
 		e.stop();
 	});
 
-	//Bootstrap.Tab
+	//BootStrap.Tab
+
 	$$('[data-toggle="tab"], [data-toggle="pill"]').invoke('observe','click',function(e){
 		e.preventDefault();
 		new BootStrap.Tab(this).show()
 	});
-	
-	//Bootstrap.Typeahead
+
+	//BootStrap.Typeahead
+
 	$$('[data-provide="typeahead"]').each(function(i){
 		new BootStrap.Typeahead(i)
 	});
