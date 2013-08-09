@@ -26,8 +26,8 @@ http://github.com/jwestbrook/bootstrap-prototype
 */
 
 
+"use strict";
 
-  "use strict"; // jshint ;_;
 if(BootStrap === undefined)
 {
   var BootStrap = {};
@@ -105,7 +105,7 @@ BootStrap.Collapse = Class.create({
 				newstyle[dimension] = this.$element[scroll]+'px'
 				this.$element.setStyle(newstyle)
 			}.bind(this)})
-		/* 		   this.$element[dimension](this.$element[scroll] */
+		/*	this.$element[dimension](this.$element[scroll] */
 		}
 	}
 	
@@ -116,7 +116,7 @@ BootStrap.Collapse = Class.create({
 		this.reset(this.$element.getStyle(dimension))
 		this.transition('removeClassName', 'hide', 'bootstrap:hidden')
 		this.reset('0px')
-		if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && Effect.Queues.get('global').effects.length == 0)
+		if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && Effect.Queues.get('global').effects.length === 0)
 		{
 			var newstyle = {}
 			newstyle[dimension] = '0px'
@@ -195,9 +195,8 @@ BootStrap.Collapse = Class.create({
 
 
 
+/*domload*/
 
- /* COLLAPSIBLE DATA-API
-  * ==================== */
 document.observe('dom:loaded',function(){
 	$$('[data-toggle="collapse"]').each(function(e){
 		var href = e.readAttribute('href');

@@ -25,8 +25,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 */
 
-
-  "use strict"; // jshint ;_;
+"use strict";
 
 
  /* TAB CLASS DEFINITION
@@ -129,6 +128,7 @@ BootStrap.Tab = Class.create({
 	}
 });
 
+/*domload*/
 
 document.observe("dom:loaded",function(){
 	$$('[data-toggle="tab"], [data-toggle="pill"]').invoke('observe','click',function(e){

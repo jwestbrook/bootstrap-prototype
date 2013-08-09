@@ -25,8 +25,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 */
 
-
-  "use strict"; // jshint ;_;
+"use strict";
 
 if(BootStrap === undefined)
 {
@@ -36,7 +35,7 @@ if(BootStrap === undefined)
 
 
   /* NOTE: POPOVER EXTENDS BOOTSTRAP-TOOLTIP.js
-	 ========================================== */
+	========================================== */
 BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 	initialize : function ($super,element, options) {
 		element.store('bootstrap:popover',this)

@@ -25,9 +25,8 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 */
 
+"use strict";
 
-
-	"use strict"; // jshint ;_;
 if(BootStrap === undefined)
 {
 	var BootStrap = {};
@@ -80,8 +79,7 @@ BootStrap.Button = Class.create({
 });
 
 
-	/* BUTTON DATA-API
-	* =============== */
+/*domload*/
 
 document.observe("dom:loaded",function(){
 	$$("[data-toggle^=button]").invoke("observe","click",function(e){

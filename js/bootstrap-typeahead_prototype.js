@@ -27,8 +27,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 */
 
-
-  "use strict"; // jshint ;_;
+"use strict";
 
 if(BootStrap === undefined)
 {
@@ -292,8 +291,7 @@ BootStrap.Typeahead = Class.create({
 
 
 
- /* TYPEAHEAD DATA-API
-  * ================== */
+/*domload*/
 
 document.observe('dom:loaded',function(){
 	$$('[data-provide="typeahead"]').each(function(i){
