@@ -25,8 +25,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 */
 
-
-"use strict"; // jshint ;_;
+"use strict";
 
 if(BootStrap === undefined)
 {
@@ -115,12 +114,13 @@ BootStrap.Carousel = Class.create({
 		, fallback  = type == 'next' ? 'first' : 'last'
 		, that = this
 		, e
+		, slideEvent
 		
 		this.sliding = true
 		
 		isCycling && this.pause()
 
-		$next = $next != undefined ? $next : this.$element.select('.item')[fallback]()
+		$next = $next !== undefined ? $next : this.$element.select('.item')[fallback]()
 
 		type = (type == 'previous' ? 'prev' : type)
 /*
@@ -143,7 +143,7 @@ BootStrap.Carousel = Class.create({
 
 
 		if (BootStrap.handleeffects == 'css' && this.$element.hasClassName('slide')) {
-			var slideEvent = this.$element.fire('bootstrap:slide')
+			slideEvent = this.$element.fire('bootstrap:slide')
 			if(slideEvent.defaultPrevented) return
 
 			this.$element.on(BootStrap.transitionendevent, function (e) {
@@ -183,7 +183,7 @@ BootStrap.Carousel = Class.create({
 			})
 			
 		} else {
-			var slideEvent = this.$element.fire('bootstrap:slide')
+			slideEvent = this.$element.fire('bootstrap:slide')
 			if(slideEvent.defaultPrevented) return
 			$active.removeClassName('active')
 			$next.addClassName('active')
@@ -196,6 +196,7 @@ BootStrap.Carousel = Class.create({
 	}
 });
 
+/*domload*/
 
 document.observe('dom:loaded',function(){
 	document.on('click','[data-slide], [data-slide-to]',function(e){
@@ -203,7 +204,7 @@ document.observe('dom:loaded',function(){
 		, $target = $($this.readAttribute('data-target') || (href = $this.readAttribute('href')) && href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')) //strip for ie7
 		, options = Object.extend({})
 		, to = $this.readAttribute('data-slide')
-		, slideindex
+		, slideIndex
 		
 		$target.retrieve('bootstrap:carousel')[to]()
 

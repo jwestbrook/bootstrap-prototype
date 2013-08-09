@@ -25,6 +25,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 */
 
+"use strict";
 
 
 /* MODAL CLASS DEFINITION
@@ -38,10 +39,10 @@ BootStrap.Modal = Class.create({
 	initialize : function (element, options) {
 		element.store('bootstrap:modal',this)
 		this.$element = $(element);
-		this.options = options != undefined ? options : {}
-		this.options.backdrop = this.options.backdrop != undefined ? options.backdrop : true
-		this.options.keyboard = this.options.keyboard != undefined ? options.keyboard : true
-		this.options.show = this.options.show != undefined ? options.show : true
+		this.options = options !== undefined ? options : {}
+		this.options.backdrop = this.options.backdrop !== undefined ? options.backdrop : true
+		this.options.keyboard = this.options.keyboard !== undefined ? options.keyboard : true
+		this.options.show = this.options.show !== undefined ? options.show : true
 
 
 		if(this.options.show)
@@ -73,7 +74,7 @@ BootStrap.Modal = Class.create({
 		this.backdrop(function () {
 			var transition = (BootStrap.handleeffects == 'css' || (BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Fade !== 'undefined')) && that.$element.hasClassName('fade')
 
-			if (that.$element.up('body') == undefined) {
+			if (that.$element.up('body') === undefined) {
 				$$("body")[0].insert(that.$element);
 			}
 			that.$element.setStyle({display:'block'})
@@ -237,14 +238,13 @@ BootStrap.Modal = Class.create({
 
 
 
-/* MODAL DATA-API
-* ============== */
+/*domload*/
 
 document.observe("dom:loaded",function(){
 	$$("[data-toggle='modal']").invoke("observe","click",function(e){
 		var target = this.readAttribute("data-target") || (this.href && this.href.replace(/.*(?=#[^\s]+$)/,'').replace(/#/,''));
 		var options = {};
-		if($(target) != undefined) {
+		if($(target) !== undefined) {
 			target = $(target);
 			if(!/#/.test(this.href)) {
 				options.remote = this.href;

@@ -26,8 +26,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 */
 
-
-  "use strict"; // jshint ;_;
+"use strict";
 
 if(BootStrap === undefined)
 {
@@ -69,7 +68,7 @@ BootStrap.Tooltip = Class.create({
 				, hide: options.delay
 			}
 		}
-		if(this.options.subclass == undefined) {
+		if(this.options.subclass === undefined) {
 			this.init('tooltip', element)
 		}
 	}

@@ -25,8 +25,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 */
 
-
-  "use strict"; // jshint ;_;
+"use strict";
 
 if(BootStrap === undefined)
 {
@@ -44,18 +43,18 @@ BootStrap.Alert = Class.create({
 	},
 	close : function (e) {
 		var $this = $(this)
-		  , selector = $this.readAttribute('data-target')
-		  , $parent
-		  
+		var selector = $this.readAttribute('data-target')
+		var $parent
+
 	
 		if (!selector) {
 			selector = $this.href
 			selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '').replace('#','') //strip for ie7
 		}
 		
-		(selector != undefined && selector.length > 0) ? $parent = $(selector) : '';
+		(selector !== undefined && selector.length > 0) ? $parent = $(selector) : '';
 	
-		($parent != undefined && $parent.length) || ($parent = $this.hasClassName('alert') ? $this : $this.up())
+		($parent !== undefined && $parent.length) || ($parent = $this.hasClassName('alert') ? $this : $this.up())
 	
 		var closeEvent = $parent.fire('bootstrap:close')
 
@@ -87,6 +86,8 @@ BootStrap.Alert = Class.create({
 
 	}
 });
+
+/*domload*/
 
 document.observe("dom:loaded",function(){
 	$$('.alert [data-dismiss="alert"]').each(function(i){
