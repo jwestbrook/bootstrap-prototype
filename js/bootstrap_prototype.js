@@ -24,7 +24,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 
 */
-/* BUILD TIME Fri Aug 09 2013 08:18:00 GMT-0700 (PDT) */
+/* BUILD TIME Tue Aug 13 2013 08:40:43 GMT-0700 (Pacific Daylight Time) */
 
 "use strict";
 var BootStrap = {
@@ -375,8 +375,8 @@ BootStrap.Collapse = Class.create({
 		
 		if(BootStrap.handleeffects == 'css'){
 			newstyle = {}
-//			newstyle[dimension] = this.$element[scroll]+'px'
-			newstyle[dimension] = 'auto'
+			newstyle[dimension] = this.$element[scroll]+'px'
+//			newstyle[dimension] = 'auto'
 			this.$element.setStyle(newstyle)
 		} else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.BlindDown !== 'undefined'){
 			this.$element.blindDown({duration:0.5,afterFinish:function(effect){
@@ -1519,23 +1519,20 @@ BootStrap.Typeahead = Class.create({
 
 
 document.observe('dom:loaded',function(){
+/*domload*/
 
-
-	//BootStrap.Alert
 
 	$$('.alert [data-dismiss="alert"]').each(function(i){
 		new BootStrap.Alert(i)
-	})
+	})/*domload*/
 
-	//BootStrap.Button
 
 	$$("[data-toggle^=button]").invoke("observe","click",function(e){
 		var $btn = e.findElement()
 		if(!$btn.hasClassName('btn')) $btn = $btn.up('.btn')
 		new BootStrap.Button($btn,'toggle')
-	});
+	});/*domload*/
 
-	//BootStrap.Carousel
 
 	document.on('click','[data-slide], [data-slide-to]',function(e){
 		var $this = e.findElement(), href
@@ -1552,9 +1549,8 @@ document.observe('dom:loaded',function(){
 		}
 		
 		e.stop()
-	});
+	});/*domload*/
 
-	//BootStrap.Collapse
 
 	$$('[data-toggle="collapse"]').each(function(e){
 		var href = e.readAttribute('href');
@@ -1578,9 +1574,8 @@ document.observe('dom:loaded',function(){
 		href = e.findElement().hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '') : null
 		var target = e.findElement().readAttribute('data-target') || e.preventDefault() || href
 		$$(target).first().retrieve('bootstrap:collapse').toggle();
-	});
+	});/*domload*/
 
-	//BootStrap.Dropdown
 /* APPLY TO STANDARD DROPDOWN ELEMENTS
  * =================================== */
 
@@ -1589,9 +1584,8 @@ document.observe('dom:loaded',function(){
 		e.stop();
 	});
 	$$('[data-toggle=dropdown]').invoke('observe','click',BootStrap.Dropdown.prototype.toggle)
-	$$('[data-toggle=dropdown]'+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)
+	$$('[data-toggle=dropdown]'+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)/*domload*/
 
-	//BootStrap.Modal
 
 	$$("[data-toggle='modal']").invoke("observe","click",function(e){
 		var target = this.readAttribute("data-target") || (this.href && this.href.replace(/.*(?=#[^\s]+$)/,'').replace(/#/,''));
@@ -1604,16 +1598,14 @@ document.observe('dom:loaded',function(){
 			new BootStrap.Modal($(target),options);
 		}
 		e.stop();
-	});
+	});/*domload*/
 
-	//BootStrap.Tab
 
 	$$('[data-toggle="tab"], [data-toggle="pill"]').invoke('observe','click',function(e){
 		e.preventDefault();
 		new BootStrap.Tab(this).show()
-	});
+	});/*domload*/
 
-	//BootStrap.Typeahead
 
 	$$('[data-provide="typeahead"]').each(function(i){
 		new BootStrap.Typeahead(i)
