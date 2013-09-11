@@ -24,7 +24,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 
 */
-/* BUILD TIME Tue Aug 13 2013 08:40:43 GMT-0700 (Pacific Daylight Time) */
+/* BUILD TIME Wed Sep 11 2013 14:26:10 GMT-0700 (PDT) */
 
 "use strict";
 var BootStrap = {
@@ -1130,6 +1130,11 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 			, content: ''
 			, template: new Element('div',{'class':'popover'}).insert(new Element('div',{'class':'arrow'})).insert(new Element('h3',{'class':'popover-title'})).insert(new Element('div',{'class':'popover-content'}))
 		});
+		if(options && options.template && Object.isString(options.template))
+		{
+			var t = new Element('div').update(options.template);
+			options.template = t.down();
+		}
 		Object.extend(this.options,options)
 		this.init('popover',element,this.options)
 	}
@@ -1138,8 +1143,8 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 		, title = this.getTitle()
 		, content = this.getContent()
 		
-		$tip.select('.popover-title')[0].update(title)
-		$tip.select('.popover-content')[0].update(content)
+		$tip.select('.popover-title').length > 0 ? $tip.select('.popover-title')[0].update(title) : ''
+		$tip.select('.popover-content').length > 0 ? $tip.select('.popover-content')[0].update(content) : ''
 		
 		$tip.removeClassName('fade top bottom left right in')
 	}
@@ -1166,11 +1171,108 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 		return this.$tip
 	}
 	
-	, destroy: function () {
+	, destroy: function ($super) {
+		$super()
 		this.hide()
 		this.$element.stopObserving(this.options.trigger)
 	}
 });
+
+//BootStrap.Scrollspy
+BootStrap.ScrollSpy = Class.create({
+
+	initialize : function(element, options) {
+		element = $(element)
+		element.store('bootstrap:scrollspy',this)
+		//defaults
+		this.options = {
+			offset: 30
+		}
+		if(element.hasAttribute('data-target'))
+		{
+			this.options.target = element.readAttribute('data-target')
+		}
+		var $element = element.match('body') ? window : element
+		var href
+
+		Object.extend(this.options, options)
+		this.$scrollElement = $element.observe('scroll', this.process.bind(this))
+		this.selector = (this.options.target
+			|| ((href = element.readAttribute('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
+			|| '') + ' .nav li > a'
+		this.$body = $$('body').first();
+		this.refresh()
+		this.process()
+	},
+	refresh: function () {
+		var self = this
+		var $targets
+
+		this.offsets = []
+		this.targets = []
+
+		$targets = this.$body.select(this.selector).map(function(t) {
+			var $el = t
+			var href = $el.readAttribute('data-target') || $el.readAttribute('href')
+			var $href = /^#\w/.test(href) && $$(href).first()
+			return ( $href
+				&& [ $href.viewportOffset().top - $href.getHeight() + ((this.$scrollElement != window) && this.$scrollElement.cumulativeScrollOffset().top), href ] ) || null
+		},this).without(false,null)
+		.sort(function (a, b) { return a - b })
+		.each(function(v){
+			this.offsets.push(v[0])
+			this.targets.push(v[1])
+		},this)
+	},
+	process: function () {
+		var scrollTop = this.$scrollElement.cumulativeScrollOffset().top + this.options.offset
+		var scrollHeight = this.$scrollElement.scrollHeight || this.$body.scrollHeight
+		var maxScroll = scrollHeight - this.$scrollElement.getHeight()
+		var offsets = this.offsets
+		var targets = this.targets
+		var activeTarget = this.activeTarget
+		var i
+
+		if (scrollTop >= maxScroll) {
+			return activeTarget != (i = targets.last()) && this.activate ( i )
+		}
+
+		for (i = offsets.length; i--;) {
+			activeTarget != targets[i]
+				&& scrollTop >= offsets[i]
+				&& (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+				&& this.activate( targets[i] )
+		}
+	},
+	activate: function (target) {
+		var active
+		, selector
+
+		this.activeTarget = target
+
+		$$(this.options.target).length > 0 ? $$(this.options.target).first().select('.active').invoke('removeClassName','active') : '';
+
+		selector = this.selector
+		+ '[data-target="' + target + '"],'
+		+ this.selector + '[href="' + target + '"]'
+
+		active = $$(selector).first().up('li').addClassName('active')
+
+		if (active.up('.dropdown-menu') !== undefined){
+			active = active.up('li.dropdown').addClassName('active')
+		}
+
+		active.fire('bootstrap:activate')
+	}
+
+});
+
+
+Event.observe(window,'load', function () {
+	$$('[data-spy="scroll"]').each(function(element) {
+		new BootStrap.ScrollSpy(element)
+	})
+})
 
 //BootStrap.Tab
 BootStrap.Tab = Class.create({
@@ -1519,20 +1621,23 @@ BootStrap.Typeahead = Class.create({
 
 
 document.observe('dom:loaded',function(){
-/*domload*/
 
+
+	//BootStrap.Alert
 
 	$$('.alert [data-dismiss="alert"]').each(function(i){
 		new BootStrap.Alert(i)
-	})/*domload*/
+	})
 
+	//BootStrap.Button
 
 	$$("[data-toggle^=button]").invoke("observe","click",function(e){
 		var $btn = e.findElement()
 		if(!$btn.hasClassName('btn')) $btn = $btn.up('.btn')
 		new BootStrap.Button($btn,'toggle')
-	});/*domload*/
+	});
 
+	//BootStrap.Carousel
 
 	document.on('click','[data-slide], [data-slide-to]',function(e){
 		var $this = e.findElement(), href
@@ -1549,8 +1654,9 @@ document.observe('dom:loaded',function(){
 		}
 		
 		e.stop()
-	});/*domload*/
+	});
 
+	//BootStrap.Collapse
 
 	$$('[data-toggle="collapse"]').each(function(e){
 		var href = e.readAttribute('href');
@@ -1574,8 +1680,9 @@ document.observe('dom:loaded',function(){
 		href = e.findElement().hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '') : null
 		var target = e.findElement().readAttribute('data-target') || e.preventDefault() || href
 		$$(target).first().retrieve('bootstrap:collapse').toggle();
-	});/*domload*/
+	});
 
+	//BootStrap.Dropdown
 /* APPLY TO STANDARD DROPDOWN ELEMENTS
  * =================================== */
 
@@ -1584,8 +1691,9 @@ document.observe('dom:loaded',function(){
 		e.stop();
 	});
 	$$('[data-toggle=dropdown]').invoke('observe','click',BootStrap.Dropdown.prototype.toggle)
-	$$('[data-toggle=dropdown]'+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)/*domload*/
+	$$('[data-toggle=dropdown]'+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)
 
+	//BootStrap.Modal
 
 	$$("[data-toggle='modal']").invoke("observe","click",function(e){
 		var target = this.readAttribute("data-target") || (this.href && this.href.replace(/.*(?=#[^\s]+$)/,'').replace(/#/,''));
@@ -1598,14 +1706,16 @@ document.observe('dom:loaded',function(){
 			new BootStrap.Modal($(target),options);
 		}
 		e.stop();
-	});/*domload*/
+	});
 
+	//BootStrap.Tab
 
 	$$('[data-toggle="tab"], [data-toggle="pill"]').invoke('observe','click',function(e){
 		e.preventDefault();
 		new BootStrap.Tab(this).show()
-	});/*domload*/
+	});
 
+	//BootStrap.Typeahead
 
 	$$('[data-provide="typeahead"]').each(function(i){
 		new BootStrap.Typeahead(i)

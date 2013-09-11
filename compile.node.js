@@ -16,6 +16,7 @@ var nfiles =    {
 					'BootStrap.Modal':'bootstrap-modal_prototype.js',
 					'BootStrap.Tooltip':'bootstrap-tooltip_prototype.js',
 					'BootStrap.Popover':'bootstrap-popover_prototype.js',
+					'BootStrap.Scrollspy':'bootstrap-scrollspy_prototype.js',
 					'BootStrap.Tab':'bootstrap-tab_prototype.js',
 					'BootStrap.Typeahead':'bootstrap-typeahead_prototype.js',
 				};
