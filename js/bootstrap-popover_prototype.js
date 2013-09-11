@@ -46,6 +46,11 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 			, content: ''
 			, template: new Element('div',{'class':'popover'}).insert(new Element('div',{'class':'arrow'})).insert(new Element('h3',{'class':'popover-title'})).insert(new Element('div',{'class':'popover-content'}))
 		});
+		if(options && options.template && Object.isString(options.template))
+		{
+			var t = new Element('div').update(options.template);
+			options.template = t.down();
+		}
 		Object.extend(this.options,options)
 		this.init('popover',element,this.options)
 	}
@@ -54,8 +59,8 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 		, title = this.getTitle()
 		, content = this.getContent()
 		
-		$tip.select('.popover-title')[0].update(title)
-		$tip.select('.popover-content')[0].update(content)
+		$tip.select('.popover-title').length > 0 ? $tip.select('.popover-title')[0].update(title) : ''
+		$tip.select('.popover-content').length > 0 ? $tip.select('.popover-content')[0].update(content) : ''
 		
 		$tip.removeClassName('fade top bottom left right in')
 	}
@@ -82,7 +87,8 @@ BootStrap.Popover = Class.create(BootStrap.Tooltip,{
 		return this.$tip
 	}
 	
-	, destroy: function () {
+	, destroy: function ($super) {
+		$super()
 		this.hide()
 		this.$element.stopObserving(this.options.trigger)
 	}
