@@ -8,6 +8,7 @@ prependlicense += "/* BUILD TIME "+new Date()+" */\n\n\"use strict\";\n";
 
 var nfiles =    {
 					'BootStrap.Transition':'bootstrap-transition_prototype.js',
+					'BootStrap.Affix':'bootstrap-affix_prototype.js',
 					'BootStrap.Alert':'bootstrap-alert_prototype.js',
 					'BootStrap.Button':'bootstrap-button_prototype.js',
 					'BootStrap.Carousel':'bootstrap-carousel_prototype.js',
