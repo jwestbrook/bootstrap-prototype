@@ -53,9 +53,12 @@ BootStrap.Alert = Class.create({
 
     var $parent = $$(selector)
 
-    if(e) e.preventDefault()
+    if(e){
+      e.preventDefault()
+      e.stop()
+    }
 
-    if($parent.length){
+    if(!$parent.length){
       $parent = $this.hasClassName('alert') ? $this : $this.up()
     }
     
@@ -91,7 +94,7 @@ BootStrap.Alert = Class.create({
 /*domload*/
 
 document.observe("dom:loaded",function(){
-  document.observe('click','[data-dismiss="alert"]',BootStrap.Alert.close)
+  document.on('click','[data-dismiss="alert"]',BootStrap.Alert.prototype.close)
   $$('.alert [data-dismiss="alert"]').each(function(i){
     new BootStrap.Alert(i)
   })

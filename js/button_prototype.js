@@ -77,7 +77,9 @@ BootStrap.Button = Class.create({
     if($parent !== undefined){
       var $input = this.$element.down('input')
       $input.writeAttribute('checked',!this.$element.hasClassName('active'))
-      $input.simulate('change')
+      if(Event.simulate){
+        $input.simulate('change')
+      }
       if($input.readAttribute('type') === 'radio') $parent.select('.active').invoke('removeClassName','active')
     }
 
@@ -95,4 +97,4 @@ document.observe("dom:loaded",function(){
     new BootStrap.Button($btn,'toggle')
     e.preventDefault()
   });
-})
+});
