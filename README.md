@@ -1,7 +1,7 @@
-Twitter Bootstrap for PrototypeJS
+Bootstrap for PrototypeJS
 ================
 
-For those developers that use PrototypeJS, Twitter Bootstrap requires the use of jQuery. If you do not want to load another library just to handle the the Bootstrap interactions use this fork of Twitter Bootstrap.
+For those developers that use PrototypeJS, Bootstrap requires the use of jQuery. If you do not want to load another library just to handle the the Bootstrap interactions use this fork of Bootstrap.
 
 
 Differences according to PrototypeJS standards
@@ -30,5 +30,5 @@ Differences according to PrototypeJS standards
 
 
 
-[Official Twitter Bootstrap README](https://github.com/jwestbrook/bootstrap-prototype/blob/master/Offical%20Bootstrap%20README.md)
+[Official Bootstrap README](https://github.com/jwestbrook/bootstrap-prototype/blob/master/Offical%20Bootstrap%20README.md)
 
