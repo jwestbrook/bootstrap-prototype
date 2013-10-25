@@ -93,10 +93,11 @@ BootStrap.Affix = Class.create({
 
 Event.observe(window,'load',function(){
 	$$('[data-spy="affix"]').each(function($spy){
-		var data = {}
-		data.offset = $spy.hasAttribute('data-offset') ? $spy.readAttribute('data-offset') : {}
-		$spy.hasAttribute('data-offset-bottom') ? data.offset.bottom = $spy.readAttribute('data-offset-bottom') : ''
-		$spy.hasAttribute('data-offset-top') ? data.offset.top = $spy.readAttribute('data-offset-top') : ''
+		var data = {};
+		data.offset = $spy.hasAttribute('data-offset') ? $spy.readAttribute('data-offset') : {};
+		$spy.hasAttribute('data-offset-bottom') ? data.offset.bottom = $spy.readAttribute('data-offset-bottom') : '';
+		$spy.hasAttribute('data-offset-top') ? data.offset.top = $spy.readAttribute('data-offset-top') : '';
 
 		new BootStrap.Affix($spy,data);
-	})
+	});
+});
