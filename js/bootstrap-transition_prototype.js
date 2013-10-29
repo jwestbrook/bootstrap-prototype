@@ -56,7 +56,7 @@ transEndEventNames.each(function(pair){
 
 //then go to scriptaculous
 
-if(BootStrap.handleeffects === null && typeof Scriptaculous !== 'undefined' && typeof Effect !== 'undefined')
+if(BootStrap.handleeffects === null && typeof Effect !== 'undefined')
 {
 	BootStrap.handleeffects = 'effect';
 }

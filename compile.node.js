@@ -1,4 +1,3 @@
-require("prototype4node")
 var fs = require("fs");
 var ClosureCompiler = require("closurecompiler");
 var JSHINT = require("jshint").JSHINT;
@@ -25,10 +24,11 @@ var nfiles =    {
 var classes = "";
 var domloaded = "document.observe('dom:loaded',function(){\n";
 var jshinterrors = [];
-var jshintconfig = fs.readFileSync('./js/.jshintrc').toString().evalJSON();
+var jshintconfig = JSON.parse(fs.readFileSync('./js/.jshintrc').toString());
 
 
-Object.keys(nfiles).each(function(t){
+for(t in nfiles)
+{
 	var class_define, domload;
 	var data = fs.readFileSync('./js/'+nfiles[t]).toString();
 	if(!JSHINT(data,jshintconfig))
@@ -37,7 +37,7 @@ Object.keys(nfiles).each(function(t){
 		throw $break;
 	}
 
-	if(data.include('domload'))
+	if(data.indexOf('domload') !== -1)
 	{
 		class_define = data.substring(0,data.indexOf('/*domload*/'));
 
@@ -68,7 +68,7 @@ Object.keys(nfiles).each(function(t){
 
 		classes += class_define+"\n\n";
 	}
-});
+};
 
 domloaded += '\n});';
 
