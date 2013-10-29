@@ -24,7 +24,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 
 */
-/* BUILD TIME Wed Sep 11 2013 18:06:19 GMT-0700 (PDT) */
+/* BUILD TIME Tue Oct 29 2013 16:18:34 GMT-0700 (PDT) */
 
 "use strict";
 var BootStrap = {
@@ -51,7 +51,7 @@ transEndEventNames.each(function(pair){
 
 //then go to scriptaculous
 
-if(BootStrap.handleeffects === null && typeof Scriptaculous !== 'undefined' && typeof Effect !== 'undefined')
+if(BootStrap.handleeffects === null && typeof Effect !== 'undefined')
 {
 	BootStrap.handleeffects = 'effect';
 }
@@ -248,14 +248,14 @@ BootStrap.Carousel = Class.create({
 		return this.$items.indexOf(this.$active)
 	}
 	, to: function (pos) {
-		var $active = this.$element.select('.item.active')
+		var $active = this.$element.down('.item.active')
 		, children = $active.up().childElements()
-		, activePos = children.index($active)
+		, activePos = children.indexOf($active)
 		
 		if (pos > (children.length - 1) || pos < 0) return
 		
 		if (this.sliding) {
-			return this.$element.on('slid', function () {
+			return this.$element.on('bootstrap:slid', function () {
 				this.to(pos)
 				}.bind(this))
 		}
@@ -1700,12 +1700,12 @@ document.observe('dom:loaded',function(){
 
 	document.on('click','[data-slide], [data-slide-to]',function(e){
 		var $this = e.findElement(), href
-		, $target = $($this.readAttribute('data-target') || (href = $this.readAttribute('href')) && href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')) //strip for ie7
+		, $target = $$($this.readAttribute('data-target') || (href = $this.readAttribute('href')) && href.replace(/.*(?=#[^\s]+$)/, '')).first() //strip for ie7
 		, options = Object.extend({})
 		, to = $this.readAttribute('data-slide')
 		, slideIndex
 		
-		$target.retrieve('bootstrap:carousel')[to]()
+		to ? $target.retrieve('bootstrap:carousel')[to]() : ''
 
 		if ($this.hasAttribute('data-slide-to')) {
 			slideIndex = $this.readAttribute('data-slide-to')
