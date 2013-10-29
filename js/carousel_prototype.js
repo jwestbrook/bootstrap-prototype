@@ -124,11 +124,11 @@ BootStrap.Carousel = Class.create({
     var slideEventmemo
     var slideEvent
 
-    if($next !== undefined){
-      if(this.options.wrap) return
+    if($next === undefined){
+      if(!this.options.wrap) return
       $next = this.$element.select('.item')[fallback]()
     }
-    
+
     this.sliding = true
     
     isCycling && this.pause()
@@ -141,7 +141,7 @@ BootStrap.Carousel = Class.create({
     
     if (this.$indicators) {
       this.$indicators.down('.active').removeClassName('active')
-      this.$element.on('bootstrap:slid', function () {
+      this.$element.observe('bootstrap:slid', function () {
         var $nextIndicator = $(this.$indicators.childElements()[this.getActiveIndex()])
         $nextIndicator && $nextIndicator.addClassName('active')
         this.$element.stopObserving('bootstrap:slid')
@@ -154,19 +154,20 @@ BootStrap.Carousel = Class.create({
       slideEvent = this.$element.fire('bootstrap:slide',slideEventmemo)
       if(slideEvent.defaultPrevented) return
 
-      this.$element.on(BootStrap.transitionendevent, function (e) {
-        $next.removeClassName([type, direction].join(' ')).addClassName('active')
-        $active.removeClassName(['active', direction].join(' '))
+      this.$element.observe(BootStrap.transitionendevent, function (e) {
+        $next.removeClassName(type).removeClassName(direction).addClassName('active')
+        $active.removeClassName('active').removeClassName(direction)
         this.sliding = false
         setTimeout(function () { this.$element.fire('bootstrap:slid') }.bind(this), 0)
-        isCycling && this.cycle()
         this.$element.stopObserving(BootStrap.transitionendevent)
+        isCycling && this.cycle()
       }.bind(this))
 
-
       $next.addClassName(type)
-      $active.addClassName(direction)
-      $next.addClassName(direction)
+      setTimeout(function(){
+        $next.addClassName(direction)
+        $active.addClassName(direction)
+      },0)
     } else if(BootStrap.handleeffects == 'effect' && typeof Effect !== 'undefined' && typeof Effect.Morph !== 'undefined'){
       
       new Effect.Parallel([
