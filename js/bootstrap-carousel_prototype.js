@@ -70,14 +70,14 @@ BootStrap.Carousel = Class.create({
 		return this.$items.indexOf(this.$active)
 	}
 	, to: function (pos) {
-		var $active = this.$element.select('.item.active')
+		var $active = this.$element.down('.item.active')
 		, children = $active.up().childElements()
-		, activePos = children.index($active)
+		, activePos = children.indexOf($active)
 		
 		if (pos > (children.length - 1) || pos < 0) return
 		
 		if (this.sliding) {
-			return this.$element.on('slid', function () {
+			return this.$element.on('bootstrap:slid', function () {
 				this.to(pos)
 				}.bind(this))
 		}
@@ -201,12 +201,12 @@ BootStrap.Carousel = Class.create({
 document.observe('dom:loaded',function(){
 	document.on('click','[data-slide], [data-slide-to]',function(e){
 		var $this = e.findElement(), href
-		, $target = $($this.readAttribute('data-target') || (href = $this.readAttribute('href')) && href.replace(/.*(?=#[^\s]+$)/, '').replace('#','')) //strip for ie7
+		, $target = $$($this.readAttribute('data-target') || (href = $this.readAttribute('href')) && href.replace(/.*(?=#[^\s]+$)/, '')).first() //strip for ie7
 		, options = Object.extend({})
 		, to = $this.readAttribute('data-slide')
 		, slideIndex
 		
-		$target.retrieve('bootstrap:carousel')[to]()
+		to ? $target.retrieve('bootstrap:carousel')[to]() : ''
 
 		if ($this.hasAttribute('data-slide-to')) {
 			slideIndex = $this.readAttribute('data-slide-to')
