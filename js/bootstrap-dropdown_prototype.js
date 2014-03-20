@@ -33,109 +33,109 @@ if(BootStrap === undefined)
 }
 
 
- /* DROPDOWN CLASS DEFINITION
-	* ========================= */
+/* DROPDOWN CLASS DEFINITION
+ * ========================= */
 BootStrap.Dropdown = Class.create({
 	initialize : function (element) {
-		element.store('bootstrap:dropdown',this)
-		var $el = $(element).on('click',this.toggle)
+		element.store('bootstrap:dropdown',this);
+		var $el = $(element).on('click',this.toggle);
 		$$('html')[0].on('click', function () {
-			$el.up().removeClassName('open')
-		})
+			$el.up().removeClassName('open');
+		});
 	}
 	,toggle: function (e) {
 		var $this = $(this)
-		, $parent
-		, isActive
+			, $parent
+			, isActive;
 
-		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
+		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return;
 
-		$parent = BootStrap.Dropdown.prototype.getParent($this)
+		$parent = BootStrap.Dropdown.prototype.getParent($this);
 
-		isActive = $parent.hasClassName('open')
+		isActive = $parent.hasClassName('open');
 
-		BootStrap.Dropdown.prototype.clearMenus()
+		BootStrap.Dropdown.prototype.clearMenus();
 
 		if (!isActive) {
 			if ('ontouchstart' in document.documentElement) {
 				// if mobile we we use a backdrop because click events don't delegate
 				var backdrop = new Element('div',{'class':'dropdown-backdrop'});
 				backdrop.observe('click',BootStrap.Dropdown.prototype.clearMenus);
-				$this.insert({'before':backdrop})
+				$this.insert({'before':backdrop});
 			}
 
-			$parent.toggleClassName('open')
+			$parent.toggleClassName('open');
 		}
 
-		$this.focus()
+		$this.focus();
 
-		e.stop()
+		e.stop();
 	}
 	, keydown: function (e) {
 		var $this
-		, $items
-		, $active
-		, $parent
-		, isActive
-		, index
+			, $items
+			, $active
+			, $parent
+			, isActive
+			, index;
 
-		if (!/(38|40|27)/.test(e.keyCode)) return
+		if (!/(38|40|27)/.test(e.keyCode)) return;
 
-		$this = $(this)
+		$this = $(this);
 
-		e.preventDefault()
-		e.stopPropagation()
+		e.preventDefault();
+		e.stopPropagation();
 
-		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
+		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return;
 
-		$parent = BootStrap.Dropdown.prototype.getParent($this)
+		$parent = BootStrap.Dropdown.prototype.getParent($this);
 
-		isActive = $parent.hasClassName('open')
+		isActive = $parent.hasClassName('open');
 
 		if (!isActive || (isActive && e.keyCode == Event.KEY_ESC))
 		{
-			if (e.which == Event.KEY_ESC) $parent.select('[data-toggle=dropdown]')[0].focus()
-			return $this.click()
+			if (e.which == Event.KEY_ESC) $parent.select('[data-toggle=dropdown]')[0].focus();
+			return $this.click();
 		}
 
 		// :visible is a jQuery extension - NOT VALID CSS
 		//      $items = $parent.select('[role=menu] li:not(.divider):visible a')
 		//
-		$items = $parent.select('[role=menu] li:not(.divider) a')
+		$items = $parent.select('[role=menu] li:not(.divider) a');
 
-		if (!$items.length) return
+		if (!$items.length) return;
 
-		index = -1
-		$items.each(function(item,i){
-		item.match(':focus') ? index = i : ''
-		})
+		index = -1;
+		$items.each(function(item,i) {
+			item.match(':focus') ? index = i : ''
+		});
 
-		if (e.keyCode == Event.KEY_UP && index > 0) index--                                        // up
-		if (e.keyCode == Event.KEY_DOWN && index < $items.length - 1) index++                        // down
-		if (!~index) index = 0
+		if (e.keyCode == Event.KEY_UP && index > 0) index--;
+		if (e.keyCode == Event.KEY_DOWN && index < $items.length - 1) index++;
+		if (!~index) index = 0;
 
-		$items[index].focus()
+		$items[index].focus();
 	}
 	, clearMenus : function(){
-		$$('.dropdown-backdrop').invoke('remove')
+		$$('.dropdown-backdrop').invoke('remove');
 		$$('[data-toggle=dropdown]').each(function(i) {
-			BootStrap.Dropdown.prototype.getParent(i).removeClassName('open')
+			BootStrap.Dropdown.prototype.getParent(i).removeClassName('open');
 		})
 	}
 	, getParent : function(element){
 		var selector = element.readAttribute('data-target')
-		, $parent
+			, $parent;
 
 		if (!selector) {
-			selector = element.readAttribute('href')
-			selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#' //strip for ie7
+			selector = element.readAttribute('href');
+			selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') && selector != '#'; //strip for ie7
 		}
 
-		$parent = selector && $$(selector)
+		$parent = selector && $$(selector);
 
-		if (!$parent || !$parent.length) $parent = element.up()
+		if (!$parent || !$parent.length) $parent = element.up();
 
-		return $parent
+		return $parent;
 
 	}
 });
@@ -144,11 +144,11 @@ BootStrap.Dropdown = Class.create({
 
 /* APPLY TO STANDARD DROPDOWN ELEMENTS
  * =================================== */
-document.observe("dom:loaded",function(){
-	document.observe('click',BootStrap.Dropdown.prototype.clearMenus)
-	$$('.dropdown form').invoke('observe','click',function(e){
+document.observe("dom:loaded",function() {
+	document.observe('click',BootStrap.Dropdown.prototype.clearMenus);
+	$$('.dropdown form').invoke('observe','click',function(e) {
 		e.stop();
 	});
-	$$('[data-toggle=dropdown]').invoke('observe','click',BootStrap.Dropdown.prototype.toggle)
-	$$('[data-toggle=dropdown]'+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown)
+	$$('[data-toggle=dropdown]').invoke('observe','click',BootStrap.Dropdown.prototype.toggle);
+	$$('[data-toggle=dropdown]'+', [role=menu]').invoke('observe','keydown',BootStrap.Dropdown.prototype.keydown);
 });
