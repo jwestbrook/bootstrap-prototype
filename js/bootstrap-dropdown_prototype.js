@@ -46,7 +46,7 @@ BootStrap.Dropdown = Class.create({
 	,toggle: function (e) {
 		var $this = $(this)
 		, $parent
-		, isActive
+		, isActive;
 
 		if ($this.hasClassName('disabled') || $this.readAttribute('disabled') == 'disabled') return
 
