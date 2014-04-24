@@ -24,7 +24,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 
 */
-/* BUILD TIME Tue Oct 29 2013 16:18:34 GMT-0700 (PDT) */
+/* BUILD TIME Thu Apr 24 2014 10:04:55 GMT-0700 (PDT) */
 
 "use strict";
 var BootStrap = {
@@ -1466,7 +1466,7 @@ BootStrap.Typeahead = Class.create({
 		return item
 	}
 	, show: function () {
-		var pos = Object.extend({}, this.$element.cumulativeOffset())
+		var pos = Object.extend({}, this.$element.positionedOffset())
 		Object.extend(pos, {
 			height: this.$element.offsetHeight
 		})
@@ -1779,4 +1779,5 @@ document.observe('dom:loaded',function(){
 	$$('[data-provide="typeahead"]').each(function(i){
 		new BootStrap.Typeahead(i)
 	});
+
 });
