@@ -78,7 +78,7 @@ BootStrap.Typeahead = Class.create({
 		return item
 	}
 	, show: function () {
-		var pos = Object.extend({}, this.$element.cumulativeOffset())
+		var pos = Object.extend({}, this.$element.positionedOffset())
 		Object.extend(pos, {
 			height: this.$element.offsetHeight
 		})
