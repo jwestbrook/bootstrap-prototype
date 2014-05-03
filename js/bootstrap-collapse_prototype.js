@@ -215,10 +215,10 @@ document.observe('dom:loaded',function(){
 		new BootStrap.Collapse(target,options)
 	});
 
-	document.on('click','[data-toggle="collapse"]',function(e){
-		var href = e.findElement().readAttribute('href');
-		href = e.findElement().hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '') : null
-		var target = e.findElement().readAttribute('data-target') || e.preventDefault() || href
+	document.on('click','[data-toggle="collapse"]',function(e,targetelement){
+		var href = targetelement.readAttribute('href');
+		href = targetelement.hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '') : null
+		var target = targetelement.readAttribute('data-target') || e.preventDefault() || href
 		$$(target).first().retrieve('bootstrap:collapse').toggle();
 	});
 });
