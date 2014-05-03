@@ -24,7 +24,7 @@ http://github.com/jwestbrook/bootstrap-prototype
 
 
 */
-/* BUILD TIME Thu Apr 24 2014 10:04:55 GMT-0700 (PDT) */
+/* BUILD TIME Sat May 03 2014 08:07:36 GMT-0700 (PDT) */
 
 "use strict";
 var BootStrap = {
@@ -1734,10 +1734,10 @@ document.observe('dom:loaded',function(){
 		new BootStrap.Collapse(target,options)
 	});
 
-	document.on('click','[data-toggle="collapse"]',function(e){
-		var href = e.findElement().readAttribute('href');
-		href = e.findElement().hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '') : null
-		var target = e.findElement().readAttribute('data-target') || e.preventDefault() || href
+	document.on('click','[data-toggle="collapse"]',function(e,targetelement){
+		var href = targetelement.readAttribute('href');
+		href = targetelement.hasAttribute('href') ? href.replace(/.*(?=#[^\s]+$)/, '') : null
+		var target = targetelement.readAttribute('data-target') || e.preventDefault() || href
 		$$(target).first().retrieve('bootstrap:collapse').toggle();
 	});
 
