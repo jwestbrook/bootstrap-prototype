@@ -50,7 +50,7 @@ BootStrap.ScrollSpy = Class.create({
 		var href
 
 		Object.extend(this.options, options)
-		this.$scrollElement = $element.observe('scroll', this.process.bind(this))
+		this.$scrollElement = Event.observe($element,'scroll', this.process.bind(this))
 		this.selector = (this.options.target
 			|| ((href = element.readAttribute('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
 			|| '') + ' .nav li > a'
@@ -70,18 +70,18 @@ BootStrap.ScrollSpy = Class.create({
 			var href = $el.readAttribute('data-target') || $el.readAttribute('href')
 			var $href = /^#\w/.test(href) && $$(href).first()
 			return ( $href
-				&& [ $href.viewportOffset().top - $href.getHeight() + ((this.$scrollElement != window) && this.$scrollElement.cumulativeScrollOffset().top), href ] ) || null
+				&& [ $href.cumulativeOffset().top + ((this.$scrollElement != window) && this.$scrollElement.cumulativeScrollOffset().top), href ] ) || null
 		},this).without(false,null)
-		.sort(function (a, b) { return a - b })
+		.sort(function (a, b) { return a[0] - b[0] })
 		.each(function(v){
 			this.offsets.push(v[0])
 			this.targets.push(v[1])
 		},this)
 	},
 	process: function () {
-		var scrollTop = this.$scrollElement.cumulativeScrollOffset().top + this.options.offset
+		var scrollTop = (this.$scrollElement===window?document.viewport.getScrollOffsets().top:this.$scrollElement.cumulativeScrollOffset().top) + this.options.offset
 		var scrollHeight = this.$scrollElement.scrollHeight || this.$body.scrollHeight
-		var maxScroll = scrollHeight - this.$scrollElement.getHeight()
+		var maxScroll = scrollHeight - (this.$scrollElement===window?document.viewport.getHeight():this.$scrollElement.getHeight())
 		var offsets = this.offsets
 		var targets = this.targets
 		var activeTarget = this.activeTarget
