@@ -1,4 +1,5 @@
 # [Bootstrap v2.3.2](http://twbs.github.com/bootstrap) [![Build Status](https://secure.travis-ci.org/twbs/bootstrap.png)](http://travis-ci.org/twbs/bootstrap)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/jwestbrook/bootstrap-prototype?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Bootstrap is a sleek, intuitive, and powerful front-end framework for faster and easier web development, created and maintained by [Mark Otto](http://twitter.com/mdo) and [Jacob Thornton](http://twitter.com/fat).
 
