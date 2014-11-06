@@ -1,6 +1,8 @@
 Bootstrap for PrototypeJS
 ================
 
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/jwestbrook/bootstrap-prototype?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 For those developers that use PrototypeJS, Bootstrap requires the use of jQuery. If you do not want to load another library just to handle the the Bootstrap interactions use this fork of Bootstrap.
 
 
