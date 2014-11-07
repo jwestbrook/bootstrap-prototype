@@ -62,7 +62,7 @@ BootStrap.Affix = Class.create({
 		, offset = this.options.offset
 		, offsetBottom = offset.bottom
 		, offsetTop = offset.top
-		, reset = 'affix affix-top affix-bottom'
+		, reset = ['affix','affix-top','affix-bottom']
 		, affix
 
 		if (typeof offset != 'object') offsetBottom = offsetTop = offset
@@ -79,7 +79,8 @@ BootStrap.Affix = Class.create({
 		this.affixed = affix
 		this.unpin = affix == 'bottom' ? position.top - scrollTop : null
 
-		this.$element.removeClassName(reset).addClassName('affix' + (affix ? '-' + affix : ''))
+		$(reset).each(function(a){Element.removeClassName(this.$element,a)},this)
+		this.$element.addClassName('affix' + (affix ? '-' + affix : ''))
 	}
 });
 
