@@ -323,22 +323,16 @@ BootStrap.Modal = Class.create({
 * ============== */
 
 document.observe("dom:loaded",function(){
-	$$("[data-toggle='modal']").invoke("observe","click",function(e){
-		var target = this.readAttribute("data-target") || (this.href && this.href.replace(/.*(?=#[^\s]+$)/,''));
+	document.on('click','[data-toggle="modal"]',function(e,targetElement){
+		var target = targetElement.readAttribute("data-target") || (targetElement.href && targetElement.href.replace(/.*(?=#[^\s]+$)/,''));
 		var options = {};
 		if($$(target).length > 0) {
 			target = $$(target).first();
-			if(!/#/.test(this.href)) {
-				options.remote = this.href;
+			if(!/#/.test(targetElement.href)) {
+				options.remote = targetElement.href;
 			}
 			new BootStrap.Modal($(target),options);
 		}
-		e.stop();
-	});
-	document.on('bootstrap:show','.modal',function(){
-		$$('body').first().addClassName('modal-open');
-	});
-	$(document).on('bootstrap:hidden','.modal',function(){
-		$$('body').first().removeClassName('modal-open');
+		if(targetElement.match('a')) e.stop()
 	});
 })
